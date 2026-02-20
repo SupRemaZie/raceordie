@@ -1,5 +1,12 @@
 import Link from 'next/link'
-import { DataTable } from '@/components/shared/DataTable'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { EloBadge } from '@/components/shared/EloBadge'
 import { MoneyDisplay } from '@/components/shared/MoneyDisplay'
 
@@ -16,51 +23,48 @@ interface RankingTableProps {
 }
 
 export function RankingTable({ drivers }: RankingTableProps): React.JSX.Element {
-  const columns = [
-    {
-      key: 'position',
-      header: '#',
-      render: (_: Driver, idx?: number) => (
-        <span className="font-bold text-muted-foreground">{(idx ?? 0) + 1}</span>
-      ),
-    },
-    {
-      key: 'tag',
-      header: 'TAG',
-      render: (d: Driver) => (
-        <span className="font-mono font-bold text-sm bg-muted px-2 py-0.5 rounded">{d.tag}</span>
-      ),
-    },
-    {
-      key: 'name',
-      header: 'Driver',
-      render: (d: Driver) => (
-        <Link href={`/drivers/${d.id}`} className="hover:underline font-medium">
-          {d.name}
-        </Link>
-      ),
-    },
-    {
-      key: 'elo',
-      header: 'ELO',
-      render: (d: Driver) => <EloBadge elo={d.elo} />,
-    },
-    {
-      key: 'balance',
-      header: 'Balance',
-      render: (d: Driver) => <MoneyDisplay amount={d.balance} />,
-    },
-  ]
-
   return (
-    <DataTable
-      columns={columns.map((col) => ({
-        ...col,
-        render: (row: Driver) => col.render(row),
-      }))}
-      data={drivers}
-      rowKey={(d) => d.id}
-      emptyMessage="No drivers with a license this season"
-    />
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-12">#</TableHead>
+          <TableHead>TAG</TableHead>
+          <TableHead>Driver</TableHead>
+          <TableHead>ELO</TableHead>
+          <TableHead>Balance</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {drivers.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+              No licensed drivers this season
+            </TableCell>
+          </TableRow>
+        ) : (
+          drivers.map((driver, idx) => (
+            <TableRow key={driver.id}>
+              <TableCell className="font-bold text-muted-foreground">{idx + 1}</TableCell>
+              <TableCell>
+                <span className="font-mono font-bold text-sm bg-muted px-2 py-0.5 rounded">
+                  {driver.tag}
+                </span>
+              </TableCell>
+              <TableCell>
+                <Link href={`/drivers/${driver.id}`} className="hover:underline font-medium">
+                  {driver.name}
+                </Link>
+              </TableCell>
+              <TableCell>
+                <EloBadge elo={driver.elo} />
+              </TableCell>
+              <TableCell>
+                <MoneyDisplay amount={driver.balance} />
+              </TableCell>
+            </TableRow>
+          ))
+        )}
+      </TableBody>
+    </Table>
   )
 }

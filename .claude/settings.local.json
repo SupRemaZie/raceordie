@@ -6,7 +6,9 @@
       "Bash(npx shadcn@latest add button badge card dialog form input label select table toast tabs dropdown-menu avatar separator --yes)",
       "Bash(npx shadcn@latest add button badge card dialog form input label select table sonner tabs dropdown-menu avatar separator --yes)",
       "Bash(npx prisma init:*)",
-      "Bash(npx vitest run:*)"
+      "Bash(npx vitest run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(ls:*)"
     ]
   }
 }

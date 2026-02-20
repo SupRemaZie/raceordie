@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { driverService } from '@/lib/container'
+import { prisma } from '@/lib/prisma'
 import { DomainError } from '@/domain/errors/DomainError'
 
 const updateDriverSchema = z.object({
@@ -12,15 +12,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
   const { id } = await params
-  try {
-    const driver = await driverService.getDriver(id)
-    return NextResponse.json(driver)
-  } catch (err) {
-    if (err instanceof DomainError && err.code === 'DRIVER_NOT_FOUND') {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    }
-    throw err
+  const driver = await prisma.driver.findUnique({ where: { id } })
+  if (!driver) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
+  return NextResponse.json(driver)
 }
 
 export async function PATCH(
@@ -36,13 +32,8 @@ export async function PATCH(
   }
 
   try {
-    const driver = await driverService.getDriver(id)
-    const updated = await (await import('@/lib/container')).driverService.listAll()
-    void updated
-    // Direct update via repo not exposed on service — use prisma
-    const { prisma } = await import('@/lib/prisma')
     const result = await prisma.driver.update({
-      where: { id: driver.id },
+      where: { id },
       data: parsed.data,
     })
     return NextResponse.json(result)

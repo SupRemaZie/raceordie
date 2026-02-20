@@ -11,7 +11,7 @@ export interface RaceResultRecord {
 
 export interface RaceRecord {
   id: string
-  season: int
+  season: number
   organizerFee: number
   finalPotCut: number
   commissionRate: number
@@ -20,9 +20,6 @@ export interface RaceRecord {
   updatedAt: Date
   results: RaceResultRecord[]
 }
-
-// Fix: season should be number not int
-type int = number
 
 export interface CreateRaceInput {
   season: number
