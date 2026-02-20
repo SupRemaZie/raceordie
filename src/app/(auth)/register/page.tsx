@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,22 +19,26 @@ export default function RegisterPage(): React.JSX.Element {
     setError(null)
 
     const form = e.currentTarget
-    const name = (form.elements.namedItem('name') as HTMLInputElement).value
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value
+    const username = (form.elements.namedItem('username') as HTMLInputElement).value
     const password = (form.elements.namedItem('password') as HTMLInputElement).value
 
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ username, password }),
     })
 
     if (!res.ok) {
-      const data = await res.json() as { error?: string }
-      setError(data.error ?? 'Registration failed')
+      let msg = 'Inscription échouée'
+      try {
+        const data = await res.json() as { error?: string }
+        if (typeof data.error === 'string') msg = data.error
+      } catch { /* non-JSON */ }
+      setError(msg)
       setLoading(false)
     } else {
-      router.push('/login')
+      await signIn('credentials', { username, password, redirect: false })
+      router.push('/ranking')
     }
   }
 
@@ -41,33 +46,43 @@ export default function RegisterPage(): React.JSX.Element {
     <div className="flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+          <CardTitle className="text-2xl font-bold">Créer un compte</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <p className="text-sm text-destructive">{error}</p>
-            )}
+            {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" type="text" required autoFocus />
+              <Label htmlFor="username">Pseudo</Label>
+              <Input
+                id="username"
+                name="username"
+                type="text"
+                required
+                autoFocus
+                minLength={2}
+                maxLength={20}
+                placeholder="MonPseudo"
+                autoComplete="username"
+              />
+              <p className="text-xs text-muted-foreground">Lettres, chiffres et _ uniquement</p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required minLength={6} />
+              <Label htmlFor="password">Mot de passe</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                required
+                minLength={6}
+                autoComplete="new-password"
+              />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating account…' : 'Register'}
+              {loading ? 'Création…' : 'S\'inscrire'}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
-              <a href="/login" className="underline">
-                Sign In
-              </a>
+              Déjà un compte ?{' '}
+              <a href="/login" className="underline">Se connecter</a>
             </p>
           </form>
         </CardContent>

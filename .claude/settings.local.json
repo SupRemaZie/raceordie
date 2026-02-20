@@ -8,7 +8,11 @@
       "Bash(npx prisma init:*)",
       "Bash(npx vitest run:*)",
       "Bash(npx tsc:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(curl:*)",
+      "Bash(node -e:*)",
+      "Bash(npx prisma migrate:*)"
     ]
   }
 }

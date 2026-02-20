@@ -19,17 +19,13 @@ export default function LoginPage(): React.JSX.Element {
     setError(null)
 
     const form = e.currentTarget
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value
+    const username = (form.elements.namedItem('username') as HTMLInputElement).value
     const password = (form.elements.namedItem('password') as HTMLInputElement).value
 
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    })
+    const result = await signIn('credentials', { username, password, redirect: false })
 
     if (result?.error) {
-      setError('Invalid email or password')
+      setError('Pseudo ou mot de passe incorrect')
       setLoading(false)
     } else {
       router.push('/ranking')
@@ -44,25 +40,21 @@ export default function LoginPage(): React.JSX.Element {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <p className="text-sm text-destructive">{error}</p>
-            )}
+            {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required autoFocus />
+              <Label htmlFor="username">Pseudo</Label>
+              <Input id="username" name="username" type="text" required autoFocus autoComplete="username" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required />
+              <Label htmlFor="password">Mot de passe</Label>
+              <Input id="password" name="password" type="password" required autoComplete="current-password" />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in…' : 'Sign In'}
+              {loading ? 'Connexion…' : 'Se connecter'}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              No account?{' '}
-              <a href="/register" className="underline">
-                Register
-              </a>
+              Pas de compte ?{' '}
+              <a href="/register" className="underline">S&apos;inscrire</a>
             </p>
           </form>
         </CardContent>

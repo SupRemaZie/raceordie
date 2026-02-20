@@ -40,8 +40,8 @@ export default async function DashboardLayout({
           ))}
         </nav>
         <Separator />
-        <div className="p-4 text-xs text-muted-foreground">
-          {session.user?.email}
+        <div className="p-4 text-xs text-muted-foreground font-mono">
+          {session.user?.name ?? 'unknown'}
         </div>
       </aside>
 
