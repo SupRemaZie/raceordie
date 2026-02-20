@@ -33,10 +33,23 @@ export default function LoginPage(): React.JSX.Element {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="w-full max-w-md space-y-6 px-4">
+        {/* Brand header */}
+        <div className="text-center space-y-1">
+          <div className="racing-stripe h-1 w-24 mx-auto rounded mb-4" />
+          <h1
+            className="text-4xl font-black tracking-widest text-primary uppercase"
+            style={{ fontFamily: 'var(--font-orbitron)' }}
+          >
+            RACEORDIE
+          </h1>
+          <p className="text-sm text-muted-foreground font-mono">🚘 Underground Racing ELO</p>
+        </div>
+
+      <Card className="w-full border-border bg-card">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">RACEORDIE</CardTitle>
+          <CardTitle className="text-xl font-bold">Se connecter</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -59,6 +72,7 @@ export default function LoginPage(): React.JSX.Element {
           </form>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }
