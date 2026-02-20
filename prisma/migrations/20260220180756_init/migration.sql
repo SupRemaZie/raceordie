@@ -4,8 +4,8 @@ CREATE TYPE "ChallengeStatus" AS ENUM ('PENDING', 'ACTIVE', 'RESOLVED', 'CANCELL
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "name" TEXT,
-    "email" TEXT NOT NULL,
+    "username" TEXT,
+    "email" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
     "password" TEXT,
@@ -117,6 +117,9 @@ CREATE TABLE "License" (
 
     CONSTRAINT "License_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
