@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest init --yes --defaults)",
+      "Bash(npx shadcn@latest add button badge card dialog form input label select table toast tabs dropdown-menu avatar separator --yes)",
+      "Bash(npx shadcn@latest add button badge card dialog form input label select table sonner tabs dropdown-menu avatar separator --yes)"
+    ]
+  }
+}
