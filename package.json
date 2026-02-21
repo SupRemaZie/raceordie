@@ -12,6 +12,7 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "prisma": "prisma"
+    ,"postinstall": "prisma generate"
   },
   "prisma": {
   },
