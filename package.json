@@ -11,7 +11,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "prisma": "prisma",
+    "prisma": "prisma"
   },
   "prisma": {
   },
