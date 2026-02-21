@@ -7,6 +7,7 @@ import { LogoutButton } from '@/components/shared/LogoutButton'
 const adminNavItems = [
   { href: '/ranking',    label: 'Ranking',    icon: '🏆' },
   { href: '/races',      label: 'Races',      icon: '🏁' },
+  { href: '/circuits',   label: 'Circuits',   icon: '🏎️' },
   { href: '/challenges', label: 'Challenges', icon: '⚡' },
   { href: '/drivers',    label: 'Drivers',    icon: '🚗' },
   { href: '/season',     label: 'Season',     icon: '📅' },
@@ -35,9 +36,6 @@ export default async function DashboardLayout({
             >
               RACEORDIE
             </h1>
-            <span className="text-xs text-muted-foreground font-mono hidden sm:inline">
-              🚘 Underground Racing ELO
-            </span>
           </div>
           <LogoutButton />
         </header>
@@ -58,9 +56,7 @@ export default async function DashboardLayout({
           >
             RACEORDIE
           </h1>
-          <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-            🚘 Underground Racing ELO
-          </p>
+  
         </div>
         <Separator className="bg-border" />
         <nav className="flex-1 p-3 space-y-0.5">

@@ -10,7 +10,7 @@ export default async function RacesPage(): Promise<React.JSX.Element> {
   const isAdmin = session?.user?.role === 'admin'
 
   const races = await prisma.race.findMany({
-    include: { results: true },
+    include: { results: { include: { driver: true } } },
     orderBy: { createdAt: 'desc' },
     take: 20,
   })

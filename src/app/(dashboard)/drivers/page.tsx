@@ -10,13 +10,6 @@ export default async function DriversPage(): Promise<React.JSX.Element> {
 
   const columns = [
     {
-      key: 'tag',
-      header: 'TAG',
-      render: (d: typeof drivers[0]) => (
-        <span className="font-mono font-bold bg-muted px-2 py-0.5 rounded text-sm">{d.tag}</span>
-      ),
-    },
-    {
       key: 'name',
       header: 'Name',
       render: (d: typeof drivers[0]) => (

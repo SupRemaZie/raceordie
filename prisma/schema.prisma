@@ -83,16 +83,32 @@ model Driver {
   licenses         License[]
 }
 
+model Circuit {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  checkpoints String[]
+  photos      String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  races Race[]
+}
+
 model Race {
   id             String   @id @default(cuid())
+  name           String   @default("")
+  raceDate       DateTime @default(now())
+  checkpoints    String[]
   season         Int
   organizerFee   Int
   finalPotCut    Int
   commissionRate Float
   resolvedAt     DateTime?
+  circuitId      String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+  circuit Circuit? @relation(fields: [circuitId], references: [id], onDelete: SetNull)
   results RaceResult[]
 }
 
@@ -102,6 +118,7 @@ model RaceResult {
   driverId   String
   position   Int
   payout     Int
+  stake      Int      @default(0)
   createdAt  DateTime @default(now())
 
   race   Race   @relation(fields: [raceId], references: [id], onDelete: Cascade)

@@ -12,7 +12,15 @@
       "Bash(npx prisma generate:*)",
       "Bash(curl:*)",
       "Bash(node -e:*)",
-      "Bash(npx prisma migrate:*)"
+      "Bash(npx prisma migrate:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm test:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npx supabase:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run seed:*)"
     ]
   }
 }
