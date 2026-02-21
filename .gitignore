@@ -20,6 +20,27 @@
 # production
 /build
 
+# Vercel
+.vercel
+.vercel_build_output/
+
+# Build outputs
+/dist
+/build
+.cache
+
+# logs
+logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
 # misc
 .DS_Store
 *.pem
@@ -41,3 +62,13 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# prisma / generated
+.prisma/
+src/generated/
+
+# local databases
+*.sqlite
+*.sqlite3
+*.db
+
