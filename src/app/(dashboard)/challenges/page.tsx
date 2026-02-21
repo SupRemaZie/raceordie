@@ -1,10 +1,14 @@
 import Link from 'next/link'
+import { auth } from '@/lib/auth'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { ChallengeCard } from '@/components/challenge/ChallengeCard'
 import { Button } from '@/components/ui/button'
 import { prisma } from '@/lib/prisma'
 
 export default async function ChallengesPage(): Promise<React.JSX.Element> {
+  const session = await auth()
+  const isAdmin = session?.user?.role === 'admin'
+
   const challenges = await prisma.challenge.findMany({
     orderBy: { createdAt: 'desc' },
     take: 20,
@@ -15,9 +19,11 @@ export default async function ChallengesPage(): Promise<React.JSX.Element> {
       <PageHeader
         title="1v1 Challenges"
         action={
-          <Button asChild>
-            <Link href="/challenges/new">+ New Challenge</Link>
-          </Button>
+          isAdmin ? (
+            <Button asChild>
+              <Link href="/challenges/new">+ New Challenge</Link>
+            </Button>
+          ) : undefined
         }
       />
       {challenges.length === 0 ? (
