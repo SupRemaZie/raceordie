@@ -55,6 +55,10 @@ export class PrismaChallengeRepository implements IChallengeRepository {
     })
   }
 
+  async delete(id: string): Promise<void> {
+    await this.prisma.challenge.delete({ where: { id } })
+  }
+
   async activate(id: string): Promise<ChallengeRecord> {
     const challenge = await this.prisma.challenge.findUnique({ where: { id } })
     if (!challenge) throw new DomainError('CHALLENGE_NOT_FOUND')

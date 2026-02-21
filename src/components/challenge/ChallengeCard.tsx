@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { MoneyDisplay } from '@/components/shared/MoneyDisplay'
@@ -26,7 +27,8 @@ const statusVariant: Record<ChallengeStatus, 'default' | 'secondary' | 'destruct
 
 export function ChallengeCard({ challenge }: ChallengeCardProps): React.JSX.Element {
   return (
-    <Card>
+    <Link href={`/challenges/${challenge.id}`}>
+    <Card className="hover:ring-1 hover:ring-primary transition-all cursor-pointer">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-mono text-muted-foreground">
@@ -53,5 +55,6 @@ export function ChallengeCard({ challenge }: ChallengeCardProps): React.JSX.Elem
         )}
       </CardContent>
     </Card>
+    </Link>
   )
 }

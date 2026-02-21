@@ -4,6 +4,7 @@ export interface DriverRecord {
   name: string
   elo: number
   balance: number
+  archived: boolean
   userId: string | null
   createdAt: Date
   updatedAt: Date
@@ -19,6 +20,7 @@ export interface UpdateDriverInput {
   name?: string
   elo?: number
   balance?: number
+  archived?: boolean
 }
 
 // Segregated read interface (ISP)
@@ -33,6 +35,7 @@ export interface IDriverReader {
 export interface IDriverWriter {
   create(input: CreateDriverInput): Promise<DriverRecord>
   update(id: string, input: UpdateDriverInput): Promise<DriverRecord>
+  delete(id: string): Promise<void>
 }
 
 // License operations (ISP)

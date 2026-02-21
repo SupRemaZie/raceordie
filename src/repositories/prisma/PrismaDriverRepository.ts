@@ -27,23 +27,32 @@ export class PrismaDriverRepository implements IDriverRepository {
     return this.prisma.driver.findMany({
       where: {
         licenses: { some: { season } },
+        archived: false,
       },
       orderBy: { elo: 'desc' },
     })
   }
 
   async create(input: CreateDriverInput): Promise<DriverRecord> {
-    const existing = await this.prisma.driver.findUnique({
-      where: { tag: input.tag },
-    })
-    if (existing) {
-      throw new DomainError('TAG_TAKEN')
-    }
+    const [byTag, byName] = await Promise.all([
+      this.prisma.driver.findUnique({ where: { tag: input.tag } }),
+      this.prisma.driver.findUnique({ where: { name: input.name } }),
+    ])
+    if (byTag) throw new DomainError('TAG_TAKEN')
+    if (byName) throw new DomainError('NAME_TAKEN')
     return this.prisma.driver.create({ data: input })
   }
 
   async update(id: string, input: UpdateDriverInput): Promise<DriverRecord> {
+    if (input.name) {
+      const existing = await this.prisma.driver.findUnique({ where: { name: input.name } })
+      if (existing && existing.id !== id) throw new DomainError('NAME_TAKEN')
+    }
     return this.prisma.driver.update({ where: { id }, data: input })
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.driver.delete({ where: { id } })
   }
 
   async hasLicense(driverId: string, season: number): Promise<boolean> {

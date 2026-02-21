@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { auth } from '@/lib/auth'
 import { challengeService } from '@/lib/container'
 import { DomainError } from '@/domain/errors/DomainError'
 
@@ -50,6 +51,23 @@ export async function PATCH(
     if (err instanceof DomainError) {
       return NextResponse.json({ error: err.code }, { status: 422 })
     }
+    throw err
+  }
+}
+
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+): Promise<NextResponse> {
+  const session = await auth()
+  if (session?.user?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
+  const { id } = await params
+  try {
+    await challengeService.deleteChallenge(id)
+    return new NextResponse(null, { status: 204 })
+  } catch (err) {
+    if (err instanceof DomainError) return NextResponse.json({ error: err.code }, { status: 422 })
     throw err
   }
 }

@@ -1,37 +1,28 @@
 import Link from 'next/link'
+import { auth } from '@/lib/auth'
 import { PageHeader } from '@/components/shared/PageHeader'
-import { DataTable } from '@/components/shared/DataTable'
-import { EloBadge } from '@/components/shared/EloBadge'
-import { MoneyDisplay } from '@/components/shared/MoneyDisplay'
+import { DriversTable } from '@/components/driver/DriversTable'
+import { Button } from '@/components/ui/button'
 import { prisma } from '@/lib/prisma'
 
 export default async function DriversPage(): Promise<React.JSX.Element> {
-  const drivers = await prisma.driver.findMany({ orderBy: { elo: 'desc' } })
+  const session = await auth()
+  const isAdmin = session?.user?.role === 'admin'
 
-  const columns = [
-    {
-      key: 'name',
-      header: 'Name',
-      render: (d: typeof drivers[0]) => (
-        <Link href={`/drivers/${d.id}`} className="hover:underline font-medium">{d.name}</Link>
-      ),
-    },
-    {
-      key: 'elo',
-      header: 'ELO',
-      render: (d: typeof drivers[0]) => <EloBadge elo={d.elo} />,
-    },
-    {
-      key: 'balance',
-      header: 'Balance',
-      render: (d: typeof drivers[0]) => <MoneyDisplay amount={d.balance} />,
-    },
-  ]
+  const drivers = await prisma.driver.findMany({ orderBy: { elo: 'desc' } })
 
   return (
     <div>
-      <PageHeader title="Drivers" description="All registered drivers" />
-      <DataTable columns={columns} data={drivers} rowKey={(d) => d.id} emptyMessage="No drivers yet" />
+      <PageHeader
+        title="Drivers"
+        description="All registered drivers"
+        action={
+          isAdmin
+            ? <Button asChild><Link href="/drivers/new">+ New Driver</Link></Button>
+            : undefined
+        }
+      />
+      <DriversTable drivers={drivers} isAdmin={isAdmin} />
     </div>
   )
 }

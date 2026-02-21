@@ -55,6 +55,13 @@ export class RaceService {
     return race.id
   }
 
+  async deleteRace(id: string): Promise<void> {
+    const race = await this.races.findById(id)
+    if (!race) throw new DomainError('RACE_NOT_FOUND')
+    if (race.resolvedAt) throw new DomainError('RACE_ALREADY_RESOLVED')
+    await this.races.delete(id)
+  }
+
   async finishRace(input: FinishRaceInput): Promise<void> {
     if (input.top3.length !== 3) throw new DomainError('INVALID_TOP3')
 

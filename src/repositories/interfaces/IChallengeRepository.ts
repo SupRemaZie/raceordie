@@ -33,4 +33,5 @@ export interface IChallengeRepository {
   resolve(id: string, winnerId: string): Promise<ChallengeRecord>
   cancel(id: string): Promise<ChallengeRecord>
   activate(id: string): Promise<ChallengeRecord>
+  delete(id: string): Promise<void>
 }

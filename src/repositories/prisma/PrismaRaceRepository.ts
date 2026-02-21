@@ -54,6 +54,10 @@ export class PrismaRaceRepository implements IRaceRepository {
     })
   }
 
+  async delete(id: string): Promise<void> {
+    await this.prisma.race.delete({ where: { id } })
+  }
+
   async updateResults(
     id: string,
     results: Array<{ driverId: string; position: number; payout: number }>,

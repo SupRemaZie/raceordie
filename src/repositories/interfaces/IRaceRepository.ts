@@ -47,4 +47,5 @@ export interface IRaceRepository {
     id: string,
     results: Array<{ driverId: string; position: number; payout: number }>,
   ): Promise<RaceRecord>
+  delete(id: string): Promise<void>
 }

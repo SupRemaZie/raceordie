@@ -3,6 +3,7 @@ import type {
   ICircuitRepository,
   CircuitRecord,
   CreateCircuitInput,
+  UpdateCircuitInput,
 } from '@/repositories/interfaces/ICircuitRepository'
 
 export class PrismaCircuitRepository implements ICircuitRepository {
@@ -18,6 +19,10 @@ export class PrismaCircuitRepository implements ICircuitRepository {
 
   async create(input: CreateCircuitInput): Promise<CircuitRecord> {
     return this.prisma.circuit.create({ data: input })
+  }
+
+  async update(id: string, input: UpdateCircuitInput): Promise<CircuitRecord> {
+    return this.prisma.circuit.update({ where: { id }, data: input })
   }
 
   async delete(id: string): Promise<void> {

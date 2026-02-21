@@ -23,7 +23,7 @@ export default async function DashboardLayout({
 
   const role = session.user?.role
 
-  // Vue racer : header minimal, leaderboard uniquement
+  // Vue racer 
   if (role === 'racer') {
     return (
       <div className="min-h-screen bg-background">

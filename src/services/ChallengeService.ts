@@ -88,4 +88,11 @@ export class ChallengeService {
   async activateChallenge(challengeId: string): Promise<ChallengeRecord> {
     return this.challenges.activate(challengeId)
   }
+
+  async deleteChallenge(challengeId: string): Promise<void> {
+    const challenge = await this.challenges.findById(challengeId)
+    if (!challenge) throw new DomainError('CHALLENGE_NOT_FOUND')
+    if (challenge.status === 'RESOLVED') throw new DomainError('CHALLENGE_ALREADY_RESOLVED')
+    await this.challenges.delete(challengeId)
+  }
 }

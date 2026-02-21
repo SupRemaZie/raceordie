@@ -26,7 +26,7 @@ export default async function CircuitsPage(): Promise<React.JSX.Element> {
       {circuits.length === 0 ? (
         <p className="text-muted-foreground mt-4">Aucun circuit enregistré.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
           {circuits.map((c) => (
             <CircuitCard key={c.id} {...c} />
           ))}

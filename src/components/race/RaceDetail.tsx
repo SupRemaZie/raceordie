@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { FinishRaceModal } from '@/components/race/FinishRaceModal'
+import { DeleteButton } from '@/components/shared/DeleteButton'
 
 interface Driver { id: string; name: string }
 
@@ -30,11 +31,12 @@ interface Race {
 
 interface RaceDetailProps {
   race: Race
+  isAdmin?: boolean
 }
 
 const MEDAL: Record<number, string> = { 1: '🥇', 2: '🥈', 3: '🥉' }
 
-export function RaceDetail({ race }: RaceDetailProps): React.JSX.Element {
+export function RaceDetail({ race, isAdmin = false }: RaceDetailProps): React.JSX.Element {
   const [modalOpen, setModalOpen] = useState(false)
   const isPending = !race.resolvedAt
 
@@ -100,6 +102,13 @@ export function RaceDetail({ race }: RaceDetailProps): React.JSX.Element {
           <Button onClick={() => setModalOpen(true)} className="w-full">
             🏁 Marquer la course comme terminée
           </Button>
+          {isAdmin && (
+            <DeleteButton
+              url={`/api/races/${race.id}`}
+              redirectTo="/races"
+              confirmMessage="Supprimer cette course ? Cette action est irréversible."
+            />
+          )}
 
           <FinishRaceModal
             raceId={race.id}
