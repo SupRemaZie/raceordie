@@ -11,7 +11,7 @@ export default async function RankingPage(): Promise<React.JSX.Element> {
     <div>
       <PageHeader
         title="ELO Ranking"
-        description="Licensed drivers this season"
+        description="Active drivers"
       />
       <RankingTable drivers={drivers} showBalance={!isRacer} />
     </div>

@@ -24,6 +24,6 @@ const eloCalculator = new EloCalculator()
 // ─── Services ─────────────────────────────────────────────────────────────────
 export const raceService = new RaceService(driverRepo, raceRepo, seasonRepo)
 export const challengeService = new ChallengeService(driverRepo, challengeRepo, seasonRepo, eloCalculator)
-export const driverService = new DriverService(driverRepo, seasonRepo)
+export const driverService = new DriverService(driverRepo)
 export const seasonService = new SeasonService(driverRepo, seasonRepo)
 export const circuitService = new CircuitService(circuitRepo)

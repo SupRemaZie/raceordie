@@ -19,7 +19,7 @@ export class SeasonService {
 
   async closeSeason(): Promise<SeasonRewardResult[]> {
     const season = await this.seasons.getCurrentSeason()
-    const ranking = await this.drivers.findRanking(season)
+    const ranking = await this.drivers.findRanking()
 
     const topDrivers = ranking.slice(0, 3).map((d, idx) => ({
       id: d.id,
@@ -41,8 +41,6 @@ export class SeasonService {
       }
     }
 
-    // Revoke all licenses (new season)
-    await this.drivers.revokeAllLicenses(season)
     await this.seasons.closeSeason(season)
 
     return rewardResults

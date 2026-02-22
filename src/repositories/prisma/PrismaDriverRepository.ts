@@ -6,7 +6,6 @@ import type {
   UpdateDriverInput,
 } from '@/repositories/interfaces/IDriverRepository'
 import { DomainError } from '@/domain/errors/DomainError'
-import { LICENSE_PRICE } from '@/domain/season/types'
 
 export class PrismaDriverRepository implements IDriverRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -23,12 +22,9 @@ export class PrismaDriverRepository implements IDriverRepository {
     return this.prisma.driver.findMany({ orderBy: { elo: 'desc' } })
   }
 
-  async findRanking(season: number): Promise<DriverRecord[]> {
+  async findRanking(): Promise<DriverRecord[]> {
     return this.prisma.driver.findMany({
-      where: {
-        licenses: { some: { season } },
-        archived: false,
-      },
+      where: { archived: false },
       orderBy: { elo: 'desc' },
     })
   }
@@ -53,32 +49,5 @@ export class PrismaDriverRepository implements IDriverRepository {
 
   async delete(id: string): Promise<void> {
     await this.prisma.driver.delete({ where: { id } })
-  }
-
-  async hasLicense(driverId: string, season: number): Promise<boolean> {
-    const license = await this.prisma.license.findUnique({
-      where: { driverId_season: { driverId, season } },
-    })
-    return license !== null
-  }
-
-  async purchaseLicense(driverId: string, season: number): Promise<void> {
-    const driver = await this.prisma.driver.findUnique({ where: { id: driverId } })
-    if (!driver) throw new DomainError('DRIVER_NOT_FOUND')
-    if (driver.balance < LICENSE_PRICE) throw new DomainError('INSUFFICIENT_BALANCE')
-
-    await this.prisma.$transaction([
-      this.prisma.driver.update({
-        where: { id: driverId },
-        data: { balance: { decrement: LICENSE_PRICE } },
-      }),
-      this.prisma.license.create({
-        data: { driverId, season },
-      }),
-    ])
-  }
-
-  async revokeAllLicenses(season: number): Promise<void> {
-    await this.prisma.license.deleteMany({ where: { season } })
   }
 }

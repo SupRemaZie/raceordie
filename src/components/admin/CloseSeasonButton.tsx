@@ -38,7 +38,7 @@ export function CloseSeasonButton({ rewardsPreview }: CloseSeasonButtonProps): R
           <DialogHeader>
             <DialogTitle>Close Current Season</DialogTitle>
             <DialogDescription>
-              This will apply ELO bonuses, revoke all licenses, and start a new season.
+              This will apply ELO bonuses and start a new season.
               This action cannot be undone.
             </DialogDescription>
           </DialogHeader>

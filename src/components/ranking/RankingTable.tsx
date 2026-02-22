@@ -39,7 +39,7 @@ export function RankingTable({ drivers, showBalance = true }: RankingTableProps)
         {drivers.length === 0 ? (
           <TableRow>
             <TableCell colSpan={colSpan} className="text-center text-muted-foreground py-8">
-              No licensed drivers this season
+              No drivers yet
             </TableCell>
           </TableRow>
         ) : (

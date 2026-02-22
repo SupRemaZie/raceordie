@@ -13,5 +13,4 @@ export interface SeasonRewardResult {
   privilege: string | null
 }
 
-export const LICENSE_PRICE = 50_000
 export const CURRENT_SEASON = 1

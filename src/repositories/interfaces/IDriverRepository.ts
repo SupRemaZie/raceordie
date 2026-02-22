@@ -28,7 +28,7 @@ export interface IDriverReader {
   findById(id: string): Promise<DriverRecord | null>
   findByTag(tag: string): Promise<DriverRecord | null>
   findAll(): Promise<DriverRecord[]>
-  findRanking(season: number): Promise<DriverRecord[]>
+  findRanking(): Promise<DriverRecord[]>
 }
 
 // Segregated write interface (ISP)
@@ -38,12 +38,5 @@ export interface IDriverWriter {
   delete(id: string): Promise<void>
 }
 
-// License operations (ISP)
-export interface IDriverLicense {
-  hasLicense(driverId: string, season: number): Promise<boolean>
-  purchaseLicense(driverId: string, season: number): Promise<void>
-  revokeAllLicenses(season: number): Promise<void>
-}
-
 // Full repository interface for DI
-export interface IDriverRepository extends IDriverReader, IDriverWriter, IDriverLicense {}
+export interface IDriverRepository extends IDriverReader, IDriverWriter {}

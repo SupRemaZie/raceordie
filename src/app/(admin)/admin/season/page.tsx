@@ -71,7 +71,7 @@ export default async function AdminSeasonPage(): Promise<React.JSX.Element> {
       )}
 
       {ranking.length === 0 && (
-        <p className="text-muted-foreground">No licensed drivers this season.</p>
+        <p className="text-muted-foreground">No drivers this season.</p>
       )}
     </div>
   )

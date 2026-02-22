@@ -4,13 +4,11 @@ import type {
   CreateDriverInput,
   UpdateDriverInput,
 } from '@/repositories/interfaces/IDriverRepository'
-import type { ISeasonRepository } from '@/repositories/interfaces/ISeasonRepository'
 import { DomainError } from '@/domain/errors/DomainError'
 
 export class DriverService {
   constructor(
     private readonly drivers: IDriverRepository,
-    private readonly seasons: ISeasonRepository,
   ) {}
 
   async createDriver(input: CreateDriverInput): Promise<DriverRecord> {
@@ -26,15 +24,7 @@ export class DriverService {
   }
 
   async getRanking(): Promise<DriverRecord[]> {
-    const season = await this.seasons.getCurrentSeason()
-    return this.drivers.findRanking(season)
-  }
-
-  async purchaseLicense(driverId: string): Promise<void> {
-    const season = await this.seasons.getCurrentSeason()
-    const hasLicense = await this.drivers.hasLicense(driverId, season)
-    if (hasLicense) throw new DomainError('LICENSE_ALREADY_OWNED')
-    await this.drivers.purchaseLicense(driverId, season)
+    return this.drivers.findRanking()
   }
 
   async updateDriver(id: string, input: UpdateDriverInput): Promise<DriverRecord> {
