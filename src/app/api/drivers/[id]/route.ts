@@ -42,15 +42,14 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
+  const { id } = await params
   const session = await auth()
   const isAdmin = session?.user?.role === 'admin'
-  const isOwnDriver = !!session?.user?.driverId
+  const isOwnDriver = session?.user?.driverId === id
 
   if (!isAdmin && !isOwnDriver) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
-
-  const { id } = await params
   const body: unknown = await req.json()
   const parsed = updateDriverSchema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Invalid input' }, { status: 400 })
@@ -92,8 +91,7 @@ export async function PATCH(
     return NextResponse.json(driver)
   } catch (err) {
     if (err instanceof DomainError) return NextResponse.json({ error: err.code }, { status: 422 })
-    const message = err instanceof Error ? err.message : 'Internal server error'
-    return NextResponse.json({ error: message }, { status: 500 })
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
@@ -122,7 +120,6 @@ export async function DELETE(
     return new NextResponse(null, { status: 204 })
   } catch (err) {
     if (err instanceof DomainError) return NextResponse.json({ error: err.code }, { status: 422 })
-    const message = err instanceof Error ? err.message : 'Internal server error'
-    return NextResponse.json({ error: message }, { status: 500 })
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -7,6 +7,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
+const ERROR_MESSAGES: Record<string, string> = {
+  NAME_TAKEN: 'Ce nom est déjà pris.',
+  LOGIN_CODE_TAKEN: 'Ce code de connexion est déjà utilisé.',
+}
+
 export function CreateDriverForm(): React.JSX.Element {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -19,18 +24,21 @@ export function CreateDriverForm(): React.JSX.Element {
 
     const form = e.currentTarget
     const name = (form.elements.namedItem('name') as HTMLInputElement).value
+    const loginCode = (form.elements.namedItem('loginCode') as HTMLInputElement).value
 
     const res = await fetch('/api/drivers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, loginCode }),
     })
 
     if (!res.ok) {
-      let msg = 'Failed to create driver'
+      let msg = 'Erreur lors de la création du driver'
       try {
         const data = await res.json() as { error?: string }
-        if (typeof data.error === 'string') msg = data.error
+        if (typeof data.error === 'string') {
+          msg = ERROR_MESSAGES[data.error] ?? data.error
+        }
       } catch { /* non-JSON */ }
       setError(msg)
       setLoading(false)
@@ -49,11 +57,23 @@ export function CreateDriverForm(): React.JSX.Element {
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && <p className="text-sm text-destructive">{error}</p>}
           <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">Nom</Label>
             <Input id="name" name="name" required autoFocus placeholder="Street name" />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="loginCode">Code de connexion</Label>
+            <Input
+              id="loginCode"
+              name="loginCode"
+              required
+              minLength={4}
+              maxLength={20}
+              placeholder="Min. 4 caractères"
+            />
+            <p className="text-xs text-muted-foreground">Le driver utilisera ce code pour se connecter.</p>
+          </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Creating…' : 'Create Driver'}
+            {loading ? 'Création…' : 'Créer le driver'}
           </Button>
         </form>
       </CardContent>

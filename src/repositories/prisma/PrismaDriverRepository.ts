@@ -28,6 +28,10 @@ export class PrismaDriverRepository implements IDriverRepository {
   async create(input: CreateDriverInput): Promise<DriverRecord> {
     const byName = await this.prisma.driver.findUnique({ where: { name: input.name } })
     if (byName) throw new DomainError('NAME_TAKEN')
+    if (input.loginCode) {
+      const byCode = await this.prisma.driver.findUnique({ where: { loginCode: input.loginCode } })
+      if (byCode) throw new DomainError('LOGIN_CODE_TAKEN')
+    }
     return this.prisma.driver.create({ data: input })
   }
 

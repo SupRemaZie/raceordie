@@ -11,6 +11,7 @@ export interface DriverRecord {
 
 export interface CreateDriverInput {
   name: string
+  loginCode?: string
   userId?: string
 }
 
