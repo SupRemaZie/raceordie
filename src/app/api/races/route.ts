@@ -1,21 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { auth } from '@/lib/auth'
 import { raceService } from '@/lib/container'
 import { prisma } from '@/lib/prisma'
 import { DomainError } from '@/domain/errors/DomainError'
 
 const createRaceSchema = z.object({
-  name: z.string().min(1, 'Le nom est requis'),
+  name: z.string().min(1, 'Le nom est requis').max(100),
   raceDate: z.string().transform((v) => new Date(v)),
-  checkpoints: z.array(z.string().min(1)).max(6).default([]),
+  checkpoints: z.array(z.string().min(1).max(200)).max(6).default([]),
   participants: z.array(
-    z.object({ driverId: z.string(), stake: z.number().int().positive() }),
+    z.object({
+      driverId: z.string(),
+      stake: z.number().int().positive().max(10_000_000),
+    }),
   ).min(2),
-  commissionRate: z.union([z.literal(0.25), z.literal(0.30)]),
   circuitId: z.string().optional(),
 })
 
 export async function GET(): Promise<NextResponse> {
+  const session = await auth()
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   const races = await prisma.race.findMany({
     include: { results: { include: { driver: true } } },
     orderBy: { createdAt: 'desc' },
@@ -24,6 +30,11 @@ export async function GET(): Promise<NextResponse> {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const session = await auth()
+  if (session?.user?.role !== 'admin') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const body: unknown = await req.json()
   const parsed = createRaceSchema.safeParse(body)
 

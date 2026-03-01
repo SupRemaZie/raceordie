@@ -21,7 +21,7 @@ export default async function AdminSeasonPage(): Promise<React.JSX.Element> {
   // Enrich preview with driver info
   const enriched = rewardsPreview.map((r) => {
     const driver = ranking.find((d) => d.id === r.driverId)
-    return { ...r, tag: driver?.tag ?? '???', name: driver?.name ?? '' }
+    return { ...r, name: driver?.name ?? '' }
   })
 
   return (
@@ -48,8 +48,7 @@ export default async function AdminSeasonPage(): Promise<React.JSX.Element> {
                     #{idx + 1}
                   </span>
                   <div>
-                    <span className="font-mono font-bold">{r.tag}</span>
-                    <span className="text-muted-foreground text-sm ml-2">{r.name}</span>
+                    <span className="font-semibold">{r.name}</span>
                   </div>
                   {r.title && <Badge variant="outline">{r.title}</Badge>}
                 </div>

@@ -48,92 +48,98 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-/* ── Underground Racing — always dark ───────────────────────────── */
+/* ── Underground Elite — always dark ───────────────────────────── */
 :root {
   --radius: 0.5rem;
 
-  /* Deep asphalt black */
-  --background: oklch(0.07 0 0);
+  /* Void black — deeper than asphalt */
+  --background: oklch(0.05 0 0);
   --foreground: oklch(0.93 0 0);
 
-  /* Cards — dark charcoal */
-  --card: oklch(0.12 0 0);
+  /* Cards — dark charcoal with subtle red tint */
+  --card: oklch(0.10 0.008 26);
   --card-foreground: oklch(0.93 0 0);
-  --popover: oklch(0.12 0 0);
+  --popover: oklch(0.10 0.008 26);
   --popover-foreground: oklch(0.93 0 0);
 
-  /* Racing red as primary */
-  --primary: oklch(0.62 0.27 26);
+  /* Electric racing red — richer, more vivid */
+  --primary: oklch(0.65 0.30 22);
   --primary-foreground: oklch(0.98 0 0);
 
-  --secondary: oklch(0.18 0 0);
+  --secondary: oklch(0.16 0 0);
   --secondary-foreground: oklch(0.93 0 0);
 
-  --muted: oklch(0.16 0 0);
-  --muted-foreground: oklch(0.56 0.02 26);
+  --muted: oklch(0.14 0 0);
+  --muted-foreground: oklch(0.52 0.03 26);
 
   /* Accent = red */
-  --accent: oklch(0.62 0.27 26);
+  --accent: oklch(0.65 0.30 22);
   --accent-foreground: oklch(0.98 0 0);
 
-  --destructive: oklch(0.62 0.27 26);
+  --destructive: oklch(0.65 0.30 22);
 
-  /* Borders — dark with red tint */
-  --border: oklch(0.22 0.04 26);
-  --input: oklch(0.18 0.02 26);
-  --ring: oklch(0.62 0.27 26);
+  /* Borders — dark with stronger red tint */
+  --border: oklch(0.20 0.05 26);
+  --input: oklch(0.16 0.02 26);
+  --ring: oklch(0.65 0.30 22);
 
-  /* Chart palette — vivid for dark bg */
-  --chart-1: oklch(0.62 0.27 26);   /* red */
-  --chart-2: oklch(0.75 0.18 65);   /* amber */
+  /* Amber — secondary speed accent */
+  --amber: oklch(0.78 0.20 55);
+  --amber-muted: oklch(0.78 0.20 55 / 0.15);
+
+  /* Chart palette */
+  --chart-1: oklch(0.65 0.30 22);   /* red */
+  --chart-2: oklch(0.78 0.20 55);   /* amber */
   --chart-3: oklch(0.55 0.2 264);   /* blue */
   --chart-4: oklch(0.68 0.22 145);  /* green */
   --chart-5: oklch(0.70 0.2 300);   /* purple */
 
-  /* Sidebar — near-pure black */
-  --sidebar: oklch(0.05 0 0);
+  /* Sidebar — void black */
+  --sidebar: oklch(0.04 0 0);
   --sidebar-foreground: oklch(0.93 0 0);
-  --sidebar-primary: oklch(0.62 0.27 26);
+  --sidebar-primary: oklch(0.65 0.30 22);
   --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.16 0.03 26);
+  --sidebar-accent: oklch(0.65 0.30 22 / 0.10);
   --sidebar-accent-foreground: oklch(0.93 0 0);
-  --sidebar-border: oklch(0.25 0.05 26);
-  --sidebar-ring: oklch(0.62 0.27 26);
+  --sidebar-border: oklch(0.20 0.05 26);
+  --sidebar-ring: oklch(0.65 0.30 22);
 }
 
-/* Keep .dark in sync (html class="dark" is set in layout.tsx) */
+/* Keep .dark in sync */
 .dark {
-  --background: oklch(0.07 0 0);
+  --background: oklch(0.05 0 0);
   --foreground: oklch(0.93 0 0);
-  --card: oklch(0.12 0 0);
+  --card: oklch(0.10 0.008 26);
   --card-foreground: oklch(0.93 0 0);
-  --popover: oklch(0.12 0 0);
+  --popover: oklch(0.10 0.008 26);
   --popover-foreground: oklch(0.93 0 0);
-  --primary: oklch(0.62 0.27 26);
+  --primary: oklch(0.65 0.30 22);
   --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.18 0 0);
+  --secondary: oklch(0.16 0 0);
   --secondary-foreground: oklch(0.93 0 0);
-  --muted: oklch(0.16 0 0);
-  --muted-foreground: oklch(0.56 0.02 26);
-  --accent: oklch(0.62 0.27 26);
+  --muted: oklch(0.14 0 0);
+  --muted-foreground: oklch(0.52 0.03 26);
+  --accent: oklch(0.65 0.30 22);
   --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.62 0.27 26);
-  --border: oklch(0.22 0.04 26);
-  --input: oklch(0.18 0.02 26);
-  --ring: oklch(0.62 0.27 26);
-  --chart-1: oklch(0.62 0.27 26);
-  --chart-2: oklch(0.75 0.18 65);
+  --destructive: oklch(0.65 0.30 22);
+  --border: oklch(0.20 0.05 26);
+  --input: oklch(0.16 0.02 26);
+  --ring: oklch(0.65 0.30 22);
+  --amber: oklch(0.78 0.20 55);
+  --amber-muted: oklch(0.78 0.20 55 / 0.15);
+  --chart-1: oklch(0.65 0.30 22);
+  --chart-2: oklch(0.78 0.20 55);
   --chart-3: oklch(0.55 0.2 264);
   --chart-4: oklch(0.68 0.22 145);
   --chart-5: oklch(0.70 0.2 300);
-  --sidebar: oklch(0.05 0 0);
+  --sidebar: oklch(0.04 0 0);
   --sidebar-foreground: oklch(0.93 0 0);
-  --sidebar-primary: oklch(0.62 0.27 26);
+  --sidebar-primary: oklch(0.65 0.30 22);
   --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.16 0.03 26);
+  --sidebar-accent: oklch(0.65 0.30 22 / 0.10);
   --sidebar-accent-foreground: oklch(0.93 0 0);
-  --sidebar-border: oklch(0.25 0.05 26);
-  --sidebar-ring: oklch(0.62 0.27 26);
+  --sidebar-border: oklch(0.20 0.05 26);
+  --sidebar-ring: oklch(0.65 0.30 22);
 }
 
 @layer base {
@@ -145,13 +151,66 @@
   }
 }
 
-/* ── Racing stripe — used on sidebar top ────────────────────────── */
+/* ── Racing stripe — diagonal red/black ─────────────────────────── */
 .racing-stripe {
   background: repeating-linear-gradient(
     -45deg,
-    oklch(0.62 0.27 26),
-    oklch(0.62 0.27 26) 4px,
-    oklch(0.07 0 0) 4px,
-    oklch(0.07 0 0) 10px
+    oklch(0.65 0.30 22),
+    oklch(0.65 0.30 22) 4px,
+    oklch(0.05 0 0) 4px,
+    oklch(0.05 0 0) 10px
   );
+}
+
+/* ── Glow utilities ─────────────────────────────────────────────── */
+
+/* Red neon glow on text — for ELO numbers, key data */
+.glow-text {
+  text-shadow:
+    0 0 8px oklch(0.65 0.30 22 / 0.8),
+    0 0 20px oklch(0.65 0.30 22 / 0.4);
+}
+
+/* Amber glow on text — for 1st place / King */
+.glow-text-amber {
+  text-shadow:
+    0 0 8px oklch(0.78 0.20 55 / 0.8),
+    0 0 20px oklch(0.78 0.20 55 / 0.4);
+}
+
+/* Glassmorphism card — subtle frosted glass effect */
+.card-glass {
+  background: oklch(0.10 0.008 26 / 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid oklch(0.65 0.30 22 / 0.15);
+}
+
+.card-glass:hover {
+  border-color: oklch(0.65 0.30 22 / 0.40);
+  box-shadow: 0 0 20px oklch(0.65 0.30 22 / 0.08);
+}
+
+/* Active nav item — left border + background glow */
+.nav-active {
+  position: relative;
+  background: oklch(0.65 0.30 22 / 0.10);
+  color: oklch(0.65 0.30 22) !important;
+  border-left: 2px solid oklch(0.65 0.30 22);
+}
+
+/* Podium card accents */
+.podium-gold {
+  border-color: oklch(0.78 0.20 55 / 0.60) !important;
+  box-shadow: 0 0 24px oklch(0.78 0.20 55 / 0.12), inset 0 0 40px oklch(0.78 0.20 55 / 0.04);
+}
+
+.podium-silver {
+  border-color: oklch(0.72 0.01 0 / 0.60) !important;
+  box-shadow: 0 0 24px oklch(0.72 0.01 0 / 0.10), inset 0 0 40px oklch(0.72 0.01 0 / 0.03);
+}
+
+.podium-bronze {
+  border-color: oklch(0.60 0.12 50 / 0.60) !important;
+  box-shadow: 0 0 24px oklch(0.60 0.12 50 / 0.10), inset 0 0 40px oklch(0.60 0.12 50 / 0.03);
 }

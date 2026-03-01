@@ -19,6 +19,7 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
+  role          String    @default("racer")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -67,11 +68,12 @@ model VerificationToken {
 
 model Driver {
   id        String   @id @default(cuid())
-  tag       String   @unique @db.VarChar(4)
   name      String   @unique
   elo       Int      @default(1000)
   balance   Int      @default(0)
   archived  Boolean  @default(false)
+  photo     String?
+  loginCode String?  @unique
   userId    String?  @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -151,4 +153,23 @@ enum ChallengeStatus {
   ACTIVE
   RESOLVED
   CANCELLED
+}
+
+model RankingConfig {
+  id              Int      @id @default(1)
+  eloFloor        Int      @default(800)
+  diffThreshold   Int      @default(50)
+  strongWinDelta  Int      @default(25)
+  strongLossDelta Int      @default(15)
+  evenWinDelta    Int      @default(15)
+  evenLossDelta   Int      @default(15)
+  weakWinDelta    Int      @default(8)
+  weakLossDelta   Int      @default(25)
+  racePoints1          Int      @default(100)
+  racePoints2          Int      @default(50)
+  racePoints3          Int      @default(30)
+  racePointsOther      Int      @default(10)
+  raceCommissionPct    Int      @default(25)
+  challengeCommissionPct Int    @default(15)
+  updatedAt            DateTime @updatedAt
 }

@@ -1,5 +1,6 @@
 export interface ChallengeFinanceInput {
   stake: number // per driver, integer
+  commissionRate?: number
 }
 
 export interface ChallengeFinanceResult {

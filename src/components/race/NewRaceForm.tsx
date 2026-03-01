@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
-interface Driver { id: string; tag: string; name: string }
+interface Driver { id: string; name: string }
 interface CircuitOption { id: string; name: string; checkpoints: string[] }
 interface NewRaceFormProps { drivers: Driver[]; circuits: CircuitOption[] }
 interface DriverEntry { driverId: string; name: string; stake: string }
@@ -25,15 +25,14 @@ export function NewRaceForm({ drivers, circuits }: NewRaceFormProps): React.JSX.
   const [name, setName] = useState('')
   const [raceDate, setRaceDate] = useState(todayISO())
   const [checkpoints, setCheckpoints] = useState<string[]>([])
-  const [commissionRate, setCommissionRate] = useState<'0.25' | '0.30'>('0.25')
 
   // Circuit
   const [circuitId, setCircuitId] = useState<string>('')
 
   // Participants
   const [entries, setEntries] = useState<DriverEntry[]>([])
-  const [selectedId, setSelectedId] = useState('')
-  const [stake, setStake] = useState('5000')
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [defaultStake, setDefaultStake] = useState('5000')
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -43,10 +42,7 @@ export function NewRaceForm({ drivers, circuits }: NewRaceFormProps): React.JSX.
   // ── Circuit selection ─────────────────────────────────────────────────────
   function handleCircuitChange(value: string): void {
     setCircuitId(value)
-    if (value === 'none') {
-      // keep existing checkpoints unchanged
-      return
-    }
+    if (value === 'none') return
     const circuit = circuits.find((c) => c.id === value)
     if (circuit) setCheckpoints([...circuit.checkpoints])
   }
@@ -65,12 +61,32 @@ export function NewRaceForm({ drivers, circuits }: NewRaceFormProps): React.JSX.
     setCheckpoints((prev) => prev.filter((_, i) => i !== idx))
   }
 
-  // ── Participants ──────────────────────────────────────────────────────────
-  function addDriver(): void {
-    const driver = drivers.find((d) => d.id === selectedId)
-    if (!driver) return
-    setEntries((prev) => [...prev, { driverId: driver.id, name: driver.name, stake }])
-    setSelectedId('')
+  // ── Multi-select drivers ──────────────────────────────────────────────────
+  function toggleDriver(id: string): void {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  function toggleAll(): void {
+    if (selectedIds.size === available.length) {
+      setSelectedIds(new Set())
+    } else {
+      setSelectedIds(new Set(available.map((d) => d.id)))
+    }
+  }
+
+  function addSelected(): void {
+    const toAdd = available.filter((d) => selectedIds.has(d.id))
+    if (toAdd.length === 0) return
+    setEntries((prev) => [
+      ...prev,
+      ...toAdd.map((d) => ({ driverId: d.id, name: d.name, stake: defaultStake })),
+    ])
+    setSelectedIds(new Set())
   }
 
   function removeEntry(idx: number): void {
@@ -94,7 +110,6 @@ export function NewRaceForm({ drivers, circuits }: NewRaceFormProps): React.JSX.
       raceDate,
       checkpoints: checkpoints.filter((c) => c.trim()),
       participants: entries.map((e) => ({ driverId: e.driverId, stake: parseInt(e.stake, 10) })),
-      commissionRate: parseFloat(commissionRate),
     }
     if (circuitId && circuitId !== 'none') body.circuitId = circuitId
 
@@ -130,25 +145,12 @@ export function NewRaceForm({ drivers, circuits }: NewRaceFormProps): React.JSX.
                 placeholder="ex. Midnight Sprint" required
               />
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="raceDate">Date</Label>
-                <Input
-                  id="raceDate" type="date" value={raceDate}
-                  onChange={(e) => setRaceDate(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Commission</Label>
-                <Select value={commissionRate} onValueChange={(v) => setCommissionRate(v as '0.25' | '0.30')}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0.25">25%</SelectItem>
-                    <SelectItem value="0.30">30%</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="raceDate">Date</Label>
+              <Input
+                id="raceDate" type="date" value={raceDate}
+                onChange={(e) => setRaceDate(e.target.value)}
+              />
             </div>
           </div>
 
@@ -212,29 +214,93 @@ export function NewRaceForm({ drivers, circuits }: NewRaceFormProps): React.JSX.
 
           <Separator />
 
-          {/* ── Participants ── */}
-          <div className="space-y-2">
-            <Label>Ajouter un pilote</Label>
-            <div className="flex gap-2">
-              <Select value={selectedId} onValueChange={setSelectedId}>
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Choisir un pilote…" />
-                </SelectTrigger>
-                <SelectContent>
-                  {available.map((d) => (
-                    <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Input
-                type="number" min="1" value={stake}
-                onChange={(e) => setStake(e.target.value)}
-                className="w-28" placeholder="Mise ($)"
-              />
-              <Button type="button" onClick={addDriver} disabled={!selectedId}>Ajouter</Button>
+          {/* ── Sélection multi-pilotes ── */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label>Pilotes disponibles</Label>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs text-muted-foreground">Mise</span>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={defaultStake}
+                    onChange={(e) => setDefaultStake(e.target.value)}
+                    className="w-28 h-7 text-sm"
+                    placeholder="Mise ($)"
+                  />
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={selectedIds.size === 0}
+                  onClick={addSelected}
+                >
+                  Ajouter {selectedIds.size > 0 ? `(${selectedIds.size})` : ''}
+                </Button>
+              </div>
             </div>
+
+            {available.length === 0 ? (
+              <p className="text-xs text-muted-foreground">Tous les pilotes ont été ajoutés</p>
+            ) : (
+              <div className="border border-border rounded-md overflow-hidden">
+                {/* Header tout sélectionner */}
+                <button
+                  type="button"
+                  onClick={toggleAll}
+                  className="w-full flex items-center gap-3 px-3 py-2 bg-muted/30 hover:bg-muted/60 transition-colors border-b border-border text-left"
+                >
+                  <div className={`size-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
+                    selectedIds.size === available.length
+                      ? 'bg-primary border-primary'
+                      : selectedIds.size > 0
+                        ? 'bg-primary/30 border-primary/60'
+                        : 'border-border'
+                  }`}>
+                    {selectedIds.size === available.length && (
+                      <svg className="size-2.5 text-primary-foreground" fill="none" viewBox="0 0 10 10">
+                        <path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                    {selectedIds.size > 0 && selectedIds.size < available.length && (
+                      <div className="w-2 h-0.5 bg-primary rounded" />
+                    )}
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    {selectedIds.size === available.length ? 'Tout désélectionner' : 'Tout sélectionner'}
+                  </span>
+                </button>
+
+                {/* Liste des pilotes */}
+                <div className="max-h-48 overflow-y-auto divide-y divide-border">
+                  {available.map((d) => (
+                    <button
+                      key={d.id}
+                      type="button"
+                      onClick={() => toggleDriver(d.id)}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-muted/40 transition-colors text-left"
+                    >
+                      <div className={`size-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
+                        selectedIds.has(d.id)
+                          ? 'bg-primary border-primary'
+                          : 'border-border'
+                      }`}>
+                        {selectedIds.has(d.id) && (
+                          <svg className="size-2.5 text-primary-foreground" fill="none" viewBox="0 0 10 10">
+                            <path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className="text-sm">{d.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
+          {/* ── Participants ajoutés ── */}
           {entries.length > 0 && (
             <div className="space-y-2">
               <Label>Participants ({entries.length})</Label>

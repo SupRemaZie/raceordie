@@ -1,5 +1,3 @@
-import type { CommissionRate } from '@/domain/race/types'
-
 export interface RaceResultRecord {
   id: string
   raceId: string
@@ -33,7 +31,7 @@ export interface CreateRaceInput {
   season: number
   organizerFee: number
   finalPotCut: number
-  commissionRate: CommissionRate
+  commissionRate: number
   circuitId?: string | null
   participants: Array<{ driverId: string; stake: number }>
 }

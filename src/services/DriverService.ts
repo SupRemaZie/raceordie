@@ -12,8 +12,6 @@ export class DriverService {
   ) {}
 
   async createDriver(input: CreateDriverInput): Promise<DriverRecord> {
-    if (input.tag.length > 4) throw new DomainError('TAG_TOO_LONG')
-    if (!/^[A-Z0-9]{2,4}$/.test(input.tag)) throw new DomainError('INVALID_TAG')
     return this.drivers.create(input)
   }
 

@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query'
 
 interface Driver {
   id: string
-  tag: string
   name: string
   elo: number
   balance: number

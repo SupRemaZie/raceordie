@@ -19,8 +19,8 @@ export default async function ChallengeDetailPage({
   const challenge = await prisma.challenge.findUnique({
     where: { id },
     include: {
-      player1: { select: { id: true, name: true, tag: true } },
-      player2: { select: { id: true, name: true, tag: true } },
+      player1: { select: { id: true, name: true } },
+      player2: { select: { id: true, name: true } },
       winner: { select: { id: true, name: true } },
     },
   })
@@ -32,7 +32,7 @@ export default async function ChallengeDetailPage({
     <div className="space-y-8 max-w-xl">
       <div className="flex items-start justify-between">
         <PageHeader
-          title={`Challenge — ${challenge.player1.tag} vs ${challenge.player2.tag}`}
+          title={`Challenge — ${challenge.player1.name} vs ${challenge.player2.name}`}
           description={`Saison ${challenge.season}`}
         />
         {canDelete && (
@@ -59,11 +59,11 @@ export default async function ChallengeDetailPage({
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-muted-foreground text-xs mb-1">Joueur 1</p>
-            <p className="font-medium">{challenge.player1.name} <span className="font-mono text-xs text-muted-foreground">[{challenge.player1.tag}]</span></p>
+            <p className="font-medium">{challenge.player1.name}</p>
           </div>
           <div>
             <p className="text-muted-foreground text-xs mb-1">Joueur 2</p>
-            <p className="font-medium">{challenge.player2.name} <span className="font-mono text-xs text-muted-foreground">[{challenge.player2.tag}]</span></p>
+            <p className="font-medium">{challenge.player2.name}</p>
           </div>
           <div>
             <p className="text-muted-foreground text-xs mb-1">Mise (chacun)</p>

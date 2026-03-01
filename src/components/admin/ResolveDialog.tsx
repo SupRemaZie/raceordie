@@ -12,14 +12,14 @@ interface ResolveDialogProps {
   challengeId: string
   player1Id: string
   player2Id: string
-  player1Tag: string
-  player2Tag: string
+  player1Name: string
+  player2Name: string
   open: boolean
   onClose: () => void
 }
 
 export function ResolveDialog({
-  challengeId, player1Id, player2Id, player1Tag, player2Tag, open, onClose,
+  challengeId, player1Id, player2Id, player1Name, player2Name, open, onClose,
 }: ResolveDialogProps): React.JSX.Element {
   const router = useRouter()
   const [winnerId, setWinnerId] = useState('')
@@ -63,8 +63,8 @@ export function ResolveDialog({
               <SelectValue placeholder="Select winner" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={player1Id}>[{player1Tag}] — Player 1</SelectItem>
-              <SelectItem value={player2Id}>[{player2Tag}] — Player 2</SelectItem>
+              <SelectItem value={player1Id}>{player1Name} — Player 1</SelectItem>
+              <SelectItem value={player2Id}>{player2Name} — Player 2</SelectItem>
             </SelectContent>
           </Select>
           {error && <p className="text-sm text-destructive">{error}</p>}

@@ -3,6 +3,28 @@ import { DomainError } from '@/domain/errors/DomainError'
 export const ELO_FLOOR = 800
 export const ELO_START = 1000
 
+export interface EloConfig {
+  eloFloor: number
+  diffThreshold: number
+  strongWinDelta: number
+  strongLossDelta: number
+  evenWinDelta: number
+  evenLossDelta: number
+  weakWinDelta: number
+  weakLossDelta: number
+}
+
+const DEFAULT_CONFIG: EloConfig = {
+  eloFloor: ELO_FLOOR,
+  diffThreshold: 50,
+  strongWinDelta: 25,
+  strongLossDelta: 15,
+  evenWinDelta: 15,
+  evenLossDelta: 15,
+  weakWinDelta: 8,
+  weakLossDelta: 25,
+}
+
 export interface EloResult {
   winnerDelta: number
   loserDelta: number
@@ -15,11 +37,17 @@ export interface IEloCalculator {
 }
 
 export class EloCalculator implements IEloCalculator {
+  private readonly cfg: EloConfig
+
+  constructor(config?: Partial<EloConfig>) {
+    this.cfg = { ...DEFAULT_CONFIG, ...config }
+  }
+
   calculate(winnerElo: number, loserElo: number): EloResult {
-    if (winnerElo < ELO_FLOOR) {
+    if (winnerElo < this.cfg.eloFloor) {
       throw new DomainError('ELO_BELOW_FLOOR')
     }
-    if (loserElo < ELO_FLOOR) {
+    if (loserElo < this.cfg.eloFloor) {
       throw new DomainError('ELO_BELOW_FLOOR')
     }
 
@@ -28,21 +56,21 @@ export class EloCalculator implements IEloCalculator {
     let winnerDelta: number
     let loserDelta: number
 
-    if (diff > 50) {
+    if (diff > this.cfg.diffThreshold) {
       // beat stronger opponent
-      winnerDelta = 25
-      loserDelta = -15
-    } else if (diff >= -50) {
+      winnerDelta = this.cfg.strongWinDelta
+      loserDelta = -this.cfg.strongLossDelta
+    } else if (diff >= -this.cfg.diffThreshold) {
       // even match
-      winnerDelta = 15
-      loserDelta = -15
+      winnerDelta = this.cfg.evenWinDelta
+      loserDelta = -this.cfg.evenLossDelta
     } else {
       // beat weaker opponent
-      winnerDelta = 8
-      loserDelta = -25
+      winnerDelta = this.cfg.weakWinDelta
+      loserDelta = -this.cfg.weakLossDelta
     }
 
-    const newLoserElo = Math.max(ELO_FLOOR, loserElo + loserDelta)
+    const newLoserElo = Math.max(this.cfg.eloFloor, loserElo + loserDelta)
 
     return {
       winnerDelta,

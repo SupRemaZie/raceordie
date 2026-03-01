@@ -10,7 +10,8 @@ export class ChallengeRules {
     }
 
     const totalPool = input.stake * 2
-    const organizerFee = Math.floor(totalPool * CHALLENGE_COMMISSION_RATE)
+    const rate = input.commissionRate ?? CHALLENGE_COMMISSION_RATE
+    const organizerFee = Math.floor(totalPool * rate)
     const winnerPrize = totalPool - organizerFee
 
     return {
