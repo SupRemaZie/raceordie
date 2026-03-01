@@ -1,13 +1,10 @@
 import type { IDriverRepository } from '@/repositories/interfaces/IDriverRepository'
 import type { IRaceRepository } from '@/repositories/interfaces/IRaceRepository'
 import type { ISeasonRepository } from '@/repositories/interfaces/ISeasonRepository'
-import { ELO_FLOOR } from '@/domain/elo/EloCalculator'
+import type { IRankingConfigRepository } from '@/repositories/interfaces/IRankingConfigRepository'
 import { RaceFinance } from '@/domain/race/RaceFinance'
 import type { CommissionRate } from '@/domain/race/types'
 import { DomainError } from '@/domain/errors/DomainError'
-
-const RACE_POINTS: Record<number, number> = { 1: 100, 2: 50, 3: 30 }
-const RACE_POINTS_DEFAULT = 10
 
 export interface CreatePendingRaceInput {
   name: string
@@ -30,6 +27,7 @@ export class RaceService {
     private readonly drivers: IDriverRepository,
     private readonly races: IRaceRepository,
     private readonly seasons: ISeasonRepository,
+    private readonly rankingConfig: IRankingConfigRepository,
   ) {}
 
   async createPendingRace(input: CreatePendingRaceInput): Promise<string> {
@@ -101,14 +99,22 @@ export class RaceService {
     }))
     await this.races.updateResults(input.raceId, results)
 
+    // Fetch config once for ELO points
+    const cfg = await this.rankingConfig.get()
+    const racePoints: Record<number, number> = {
+      1: cfg.racePoints1,
+      2: cfg.racePoints2,
+      3: cfg.racePoints3,
+    }
+
     // Update drivers balance + ELO
     for (const r of results) {
       const driver = await this.drivers.findById(r.driverId)
       if (!driver) continue
-      const points = RACE_POINTS[r.position] ?? RACE_POINTS_DEFAULT
+      const points = racePoints[r.position] ?? cfg.racePointsOther
       await this.drivers.update(r.driverId, {
         balance: driver.balance + r.payout,
-        elo: Math.max(ELO_FLOOR, driver.elo + points),
+        elo: Math.max(cfg.eloFloor, driver.elo + points),
       })
     }
   }

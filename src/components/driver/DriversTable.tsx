@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -11,11 +12,11 @@ import { ChevronDown, ChevronRight, Search, Archive } from 'lucide-react'
 
 interface Driver {
   id: string
-  tag: string
   name: string
   elo: number
   balance: number
   archived: boolean
+  photo?: string | null
 }
 
 interface DriversTableProps {
@@ -60,7 +61,7 @@ export function DriversTable({ drivers, isAdmin }: DriversTableProps): React.JSX
   const match = (d: Driver): boolean =>
     !query.trim() ||
     d.name.toLowerCase().includes(query.toLowerCase()) ||
-    d.tag.toLowerCase().includes(query.toLowerCase())
+    false
 
   // Assign rank before filtering — rank = position among active drivers
   const allActive = drivers.filter((d) => !d.archived)
@@ -79,7 +80,7 @@ export function DriversTable({ drivers, isAdmin }: DriversTableProps): React.JSX
           strokeWidth={1.8}
         />
         <Input
-          placeholder="Rechercher nom ou tag…"
+          placeholder="Rechercher un driver…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="pl-9 font-mono text-sm"
@@ -89,10 +90,9 @@ export function DriversTable({ drivers, isAdmin }: DriversTableProps): React.JSX
       {/* Active leaderboard */}
       <div className="rounded-xl border border-border overflow-hidden">
         {/* Header */}
-        <div className="grid grid-cols-[40px_1fr_80px_120px_100px] gap-0 border-b border-border bg-muted/30 px-4 py-2.5">
+        <div className="grid grid-cols-[40px_1fr_120px_100px] gap-0 border-b border-border bg-muted/30 px-4 py-2.5">
           <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">#</span>
           <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Driver</span>
-          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Tag</span>
           <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">ELO</span>
           <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Balance</span>
         </div>
@@ -116,7 +116,7 @@ export function DriversTable({ drivers, isAdmin }: DriversTableProps): React.JSX
             return (
               <div
                 key={driver.id}
-                className={`grid grid-cols-[40px_1fr_80px_120px_100px] gap-0 items-center px-4 py-3 border-b border-border/50 last:border-0 hover:bg-white/[0.02] transition-colors ${rowBg}`}
+                className={`grid grid-cols-[40px_1fr_120px_100px] gap-0 items-center px-4 py-3 border-b border-border/50 last:border-0 hover:bg-white/[0.02] transition-colors ${rowBg}`}
               >
                 {/* Rank */}
                 <div className="font-mono text-sm">
@@ -130,17 +130,16 @@ export function DriversTable({ drivers, isAdmin }: DriversTableProps): React.JSX
                 <div>
                   <Link
                     href={`/drivers/${driver.id}`}
-                    className={`font-semibold hover:text-primary transition-colors ${isTop3 ? 'text-base' : 'text-sm'}`}
+                    className={`flex items-center gap-2.5 font-semibold hover:text-primary transition-colors ${isTop3 ? 'text-base' : 'text-sm'}`}
                   >
+                    <div className="shrink-0 w-7 h-7 rounded-full overflow-hidden border border-border bg-muted flex items-center justify-center" style={{ position: 'relative' }}>
+                      {driver.photo
+                        ? <Image src={driver.photo} alt={driver.name} fill className="object-cover" />
+                        : <span className="text-[10px] font-black text-muted-foreground">{driver.name.charAt(0).toUpperCase()}</span>
+                      }
+                    </div>
                     {driver.name}
                   </Link>
-                </div>
-
-                {/* Tag */}
-                <div>
-                  <span className="font-mono text-[11px] text-muted-foreground bg-muted/50 px-2 py-0.5 rounded tracking-widest">
-                    {driver.tag}
-                  </span>
                 </div>
 
                 {/* ELO */}
@@ -181,15 +180,18 @@ export function DriversTable({ drivers, isAdmin }: DriversTableProps): React.JSX
               {archived.map((driver) => (
                 <div
                   key={driver.id}
-                  className="grid grid-cols-[40px_1fr_80px_120px_100px] gap-0 items-center px-4 py-3 border-b border-border/30 last:border-0"
+                  className="grid grid-cols-[40px_1fr_120px_100px] gap-0 items-center px-4 py-3 border-b border-border/30 last:border-0"
                 >
                   <div className="text-muted-foreground/40 text-xs font-mono">—</div>
-                  <Link href={`/drivers/${driver.id}`} className="text-sm font-medium hover:text-primary transition-colors">
+                  <Link href={`/drivers/${driver.id}`} className="flex items-center gap-2.5 text-sm font-medium hover:text-primary transition-colors">
+                    <div className="shrink-0 w-7 h-7 rounded-full overflow-hidden border border-border bg-muted flex items-center justify-center" style={{ position: 'relative' }}>
+                      {driver.photo
+                        ? <Image src={driver.photo} alt={driver.name} fill className="object-cover" />
+                        : <span className="text-[10px] font-black text-muted-foreground">{driver.name.charAt(0).toUpperCase()}</span>
+                      }
+                    </div>
                     {driver.name}
                   </Link>
-                  <span className="font-mono text-[11px] text-muted-foreground bg-muted/50 px-2 py-0.5 rounded tracking-widest">
-                    {driver.tag}
-                  </span>
                   <EloBadge elo={driver.elo} />
                   <div className="flex items-center justify-between">
                     <MoneyDisplay amount={driver.balance} className="text-sm font-mono" />

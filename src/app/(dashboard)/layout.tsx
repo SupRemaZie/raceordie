@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { Separator } from '@/components/ui/separator'
 import { LogoutButton } from '@/components/shared/LogoutButton'
 import { SidebarNav } from '@/components/shared/SidebarNav'
-import { Settings } from 'lucide-react'
+import { Settings, User } from 'lucide-react'
 import type { NavItem } from '@/components/shared/SidebarNav'
 
 const adminNavItems: NavItem[] = [
@@ -50,8 +50,9 @@ export default async function DashboardLayout({
             {driverId && (
               <Link
                 href="/profile"
-                className="text-xs font-mono tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
+                className="flex items-center gap-1.5 text-xs font-mono tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
               >
+                <User size={13} strokeWidth={1.8} />
                 Mon Profil
               </Link>
             )}
@@ -91,11 +92,14 @@ export default async function DashboardLayout({
 
         {/* Footer */}
         <div className="p-3 space-y-1">
-          <div className="flex items-center gap-2.5 px-3 py-1.5">
-            <Settings size={14} className="text-muted-foreground" strokeWidth={1.8} />
-            <span className="text-xs text-muted-foreground font-mono">Admin</span>
-          </div>
-          <LogoutButton />
+          <Link
+            href="/admin/settings"
+            className="flex items-center gap-2.5 px-3 py-1.5 rounded-md text-xs font-mono text-muted-foreground hover:bg-sidebar-accent hover:text-primary transition-all duration-150"
+          >
+            <Settings size={14} strokeWidth={1.8} />
+            Admin
+          </Link>
+          <LogoutButton sidebar />
         </div>
       </aside>
 

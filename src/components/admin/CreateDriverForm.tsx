@@ -18,13 +18,12 @@ export function CreateDriverForm(): React.JSX.Element {
     setError(null)
 
     const form = e.currentTarget
-    const tag = (form.elements.namedItem('tag') as HTMLInputElement).value.toUpperCase()
     const name = (form.elements.namedItem('name') as HTMLInputElement).value
 
     const res = await fetch('/api/drivers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tag, name }),
+      body: JSON.stringify({ name }),
     })
 
     if (!res.ok) {
@@ -50,21 +49,8 @@ export function CreateDriverForm(): React.JSX.Element {
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && <p className="text-sm text-destructive">{error}</p>}
           <div className="space-y-2">
-            <Label htmlFor="tag">TAG (2–4 chars)</Label>
-            <Input
-              id="tag"
-              name="tag"
-              maxLength={4}
-              minLength={2}
-              required
-              autoFocus
-              className="uppercase font-mono"
-              placeholder="KNGX"
-            />
-          </div>
-          <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
-            <Input id="name" name="name" required placeholder="Street name" />
+            <Input id="name" name="name" required autoFocus placeholder="Street name" />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? 'Creating…' : 'Create Driver'}

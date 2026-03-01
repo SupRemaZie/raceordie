@@ -12,7 +12,6 @@ import { MoneyDisplay } from '@/components/shared/MoneyDisplay'
 
 interface Driver {
   id: string
-  tag: string
   name: string
   elo: number
   balance: number
@@ -71,8 +70,8 @@ export function RankingTable({ drivers, showBalance = true }: RankingTableProps)
                 key={cfg.pos}
                 className={`card-glass ${cfg.cardClass} ${cfg.bgClass} rounded-xl p-5 transition-all duration-200`}
               >
-                {/* Medal + title */}
-                <div className="flex items-start justify-between mb-4">
+                {/* Title + name */}
+                <div className="flex items-start justify-between mb-3">
                   <div>
                     <p className={`text-[10px] font-mono tracking-widest uppercase ${cfg.labelClass} mb-1`}>
                       #{cfg.pos} — {cfg.title}
@@ -85,15 +84,15 @@ export function RankingTable({ drivers, showBalance = true }: RankingTableProps)
                       {driver.name}
                     </Link>
                   </div>
-                  {/* Avatar or medal */}
-                  <div className="shrink-0 w-14 h-14 rounded-full overflow-hidden border border-border bg-muted flex items-center justify-center" style={{ position: 'relative' }}>
-                    {driver.photo ? (
-                      <Image src={driver.photo} alt={driver.name} fill className="object-cover" />
-                    ) : (
-                      <span className="text-2xl leading-none">{cfg.medal}</span>
-                    )}
-                  </div>
+                  <span className="text-2xl leading-none mt-0.5">{cfg.medal}</span>
                 </div>
+
+                {/* Photo */}
+                {driver.photo && (
+                  <div className="relative w-full aspect-square rounded-lg overflow-hidden mb-4 border border-border/40">
+                    <Image src={driver.photo} alt={driver.name} fill className="object-cover" />
+                  </div>
+                )}
 
                 {/* ELO */}
                 <div className="flex items-end justify-between">
@@ -118,12 +117,6 @@ export function RankingTable({ drivers, showBalance = true }: RankingTableProps)
                   )}
                 </div>
 
-                {/* Tag badge */}
-                <div className="mt-3 pt-3 border-t border-white/5">
-                  <span className="font-mono text-xs text-muted-foreground tracking-widest">
-                    [{driver.tag}]
-                  </span>
-                </div>
               </div>
             )
           })}
@@ -169,8 +162,14 @@ export function RankingTable({ drivers, showBalance = true }: RankingTableProps)
                     <TableCell>
                       <Link
                         href={`/drivers/${driver.id}`}
-                        className={`hover:text-primary transition-colors font-semibold ${isTop3 ? 'text-base' : 'text-sm'}`}
+                        className={`flex items-center gap-2.5 hover:text-primary transition-colors font-semibold ${isTop3 ? 'text-base' : 'text-sm'}`}
                       >
+                        <div className="shrink-0 w-7 h-7 rounded-full overflow-hidden border border-border bg-muted flex items-center justify-center" style={{ position: 'relative' }}>
+                          {driver.photo
+                            ? <Image src={driver.photo} alt={driver.name} fill className="object-cover" />
+                            : <span className="text-[10px] font-black text-muted-foreground">{driver.name.charAt(0).toUpperCase()}</span>
+                          }
+                        </div>
                         {driver.name}
                       </Link>
                     </TableCell>

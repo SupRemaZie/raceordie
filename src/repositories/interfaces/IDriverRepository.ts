@@ -1,6 +1,5 @@
 export interface DriverRecord {
   id: string
-  tag: string
   name: string
   elo: number
   balance: number
@@ -11,7 +10,6 @@ export interface DriverRecord {
 }
 
 export interface CreateDriverInput {
-  tag: string
   name: string
   userId?: string
 }
@@ -26,7 +24,6 @@ export interface UpdateDriverInput {
 // Segregated read interface (ISP)
 export interface IDriverReader {
   findById(id: string): Promise<DriverRecord | null>
-  findByTag(tag: string): Promise<DriverRecord | null>
   findAll(): Promise<DriverRecord[]>
   findRanking(): Promise<DriverRecord[]>
 }

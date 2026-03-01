@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export function NewDriverForm(): React.JSX.Element {
   const router = useRouter()
-  const [tag, setTag] = useState('')
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -22,7 +21,7 @@ export function NewDriverForm(): React.JSX.Element {
     const res = await fetch('/api/drivers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tag: tag.toUpperCase(), name }),
+      body: JSON.stringify({ name }),
     })
 
     if (!res.ok) {
@@ -41,19 +40,6 @@ export function NewDriverForm(): React.JSX.Element {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && <p className="text-sm text-destructive">{error}</p>}
-
-          <div className="space-y-2">
-            <Label htmlFor="tag">Tag (2–4 caractères)</Label>
-            <Input
-              id="tag"
-              value={tag}
-              onChange={(e) => setTag(e.target.value.toUpperCase())}
-              placeholder="ex. VLTG"
-              maxLength={4}
-              required
-            />
-            <p className="text-xs text-muted-foreground">Lettres et chiffres uniquement, unique</p>
-          </div>
 
           <div className="space-y-2">
             <Label htmlFor="name">Nom</Label>

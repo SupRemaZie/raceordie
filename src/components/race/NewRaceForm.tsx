@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
-interface Driver { id: string; tag: string; name: string }
+interface Driver { id: string; name: string }
 interface CircuitOption { id: string; name: string; checkpoints: string[] }
 interface NewRaceFormProps { drivers: Driver[]; circuits: CircuitOption[] }
 interface DriverEntry { driverId: string; name: string; stake: string }

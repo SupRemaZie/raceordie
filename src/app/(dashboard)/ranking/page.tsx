@@ -6,6 +6,7 @@ import { auth } from '@/lib/auth'
 export default async function RankingPage(): Promise<React.JSX.Element> {
   const [drivers, session] = await Promise.all([driverService.getRanking(), auth()])
   const isRacer = session?.user?.role === 'racer'
+  const displayed = isRacer ? drivers.slice(0, 10) : drivers
 
   return (
     <div>
@@ -13,7 +14,7 @@ export default async function RankingPage(): Promise<React.JSX.Element> {
         title="ELO Ranking"
         description="Active drivers"
       />
-      <RankingTable drivers={drivers} showBalance={!isRacer} />
+      <RankingTable drivers={displayed} showBalance={!isRacer} />
     </div>
   )
 }

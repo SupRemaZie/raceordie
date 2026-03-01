@@ -10,7 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface Driver {
   id: string
-  tag: string
   name: string
 }
 
@@ -65,7 +64,7 @@ export function NewChallengeForm({ drivers }: NewChallengeFormProps): React.JSX.
               <SelectContent>
                 {drivers.map((d) => (
                   <SelectItem key={d.id} value={d.id}>
-                    [{d.tag}] {d.name}
+                    {d.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -81,7 +80,7 @@ export function NewChallengeForm({ drivers }: NewChallengeFormProps): React.JSX.
               <SelectContent>
                 {drivers.map((d) => (
                   <SelectItem key={d.id} value={d.id}>
-                    [{d.tag}] {d.name}
+                    {d.name}
                   </SelectItem>
                 ))}
               </SelectContent>

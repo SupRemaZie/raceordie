@@ -1,11 +1,9 @@
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { LogoutButton } from '@/components/shared/LogoutButton'
 import { SidebarNav } from '@/components/shared/SidebarNav'
-import { ArrowLeft } from 'lucide-react'
 import type { NavItem } from '@/components/shared/SidebarNav'
 
 const navItems: NavItem[] = [
@@ -13,6 +11,7 @@ const navItems: NavItem[] = [
   { href: '/admin/drivers',    label: 'Drivers',    icon: 'Car' },
   { href: '/admin/challenges', label: 'Challenges', icon: 'Zap' },
   { href: '/admin/season',     label: 'Season',     icon: 'Calendar' },
+  { href: '/admin/settings',   label: 'Settings',   icon: 'Settings' },
 ]
 
 export default async function AdminLayout({
@@ -57,17 +56,6 @@ export default async function AdminLayout({
         <Separator className="bg-border" />
 
         <SidebarNav items={navItems} />
-
-        <div className="px-3 pb-2">
-          <Separator className="bg-border mb-2" />
-          <Link
-            href="/ranking"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm text-muted-foreground hover:bg-sidebar-accent hover:text-primary transition-all duration-150"
-          >
-            <ArrowLeft size={14} strokeWidth={1.8} />
-            <span className="tracking-wide">Back to App</span>
-          </Link>
-        </div>
 
         <Separator className="bg-border" />
 

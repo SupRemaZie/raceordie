@@ -12,12 +12,12 @@ interface ChallengeActionsRowProps {
   status: ChallengeStatus
   player1Id: string
   player2Id: string
-  player1Tag: string
-  player2Tag: string
+  player1Name: string
+  player2Name: string
 }
 
 export function ChallengeActionsRow({
-  challengeId, status, player1Id, player2Id, player1Tag, player2Tag,
+  challengeId, status, player1Id, player2Id, player1Name, player2Name,
 }: ChallengeActionsRowProps): React.JSX.Element {
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
@@ -72,8 +72,8 @@ export function ChallengeActionsRow({
         challengeId={challengeId}
         player1Id={player1Id}
         player2Id={player2Id}
-        player1Tag={player1Tag}
-        player2Tag={player2Tag}
+        player1Name={player1Name}
+        player2Name={player2Name}
         open={resolveOpen}
         onClose={() => setResolveOpen(false)}
       />

@@ -6,6 +6,7 @@ import { EditDriverForm } from '@/components/driver/EditDriverForm'
 import { ArchiveButton } from '@/components/driver/ArchiveButton'
 import { DeleteButton } from '@/components/shared/DeleteButton'
 import { SetDriverCodeForm } from '@/components/driver/SetDriverCodeForm'
+import { AvatarUpload } from '@/components/driver/AvatarUpload'
 
 export default async function DriverDetailPage({
   params,
@@ -51,6 +52,7 @@ export default async function DriverDetailPage({
       />
 
       {isAdmin && <EditDriverForm driver={{ id: driver.id, name: driver.name }} />}
+      {isAdmin && <AvatarUpload driverId={driver.id} currentPhoto={driver.photo} />}
       {isAdmin && <SetDriverCodeForm driverId={driver.id} currentCode={driver.loginCode} />}
     </div>
   )

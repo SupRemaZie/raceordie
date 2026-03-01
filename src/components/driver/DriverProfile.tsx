@@ -4,7 +4,6 @@ import { MoneyDisplay } from '@/components/shared/MoneyDisplay'
 interface DriverProfileProps {
   driver: {
     id: string
-    tag: string
     name: string
     elo: number
     balance: number
@@ -115,17 +114,6 @@ export function DriverProfile({ driver, rank, total }: DriverProfileProps): Reac
               </div>
             </div>
 
-            {/* Tag pill */}
-            <div
-              className="shrink-0 font-mono text-xl font-black px-4 py-2 rounded-lg border tracking-widest"
-              style={{
-                color: tier.color,
-                borderColor: `${tier.color}50`,
-                background: `${tier.color}10`,
-              }}
-            >
-              {driver.tag}
-            </div>
           </div>
 
           {/* ELO bar */}

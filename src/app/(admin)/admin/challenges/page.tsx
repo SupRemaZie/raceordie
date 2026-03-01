@@ -18,8 +18,8 @@ export default async function AdminChallengesPage(): Promise<React.JSX.Element> 
   const challenges = await prisma.challenge.findMany({
     orderBy: { createdAt: 'desc' },
     include: {
-      player1: { select: { id: true, tag: true } },
-      player2: { select: { id: true, tag: true } },
+      player1: { select: { id: true, name: true } },
+      player2: { select: { id: true, name: true } },
     },
   })
 
@@ -43,9 +43,9 @@ export default async function AdminChallengesPage(): Promise<React.JSX.Element> 
           {challenges.map((c) => (
             <TableRow key={c.id}>
               <TableCell>
-                <span className="font-mono font-bold">{c.player1.tag}</span>
+                <span className="font-semibold">{c.player1.name}</span>
                 <span className="text-muted-foreground mx-2">vs</span>
-                <span className="font-mono font-bold">{c.player2.tag}</span>
+                <span className="font-semibold">{c.player2.name}</span>
               </TableCell>
               <TableCell><MoneyDisplay amount={c.stake} /></TableCell>
               <TableCell><MoneyDisplay amount={c.winnerPrize} /></TableCell>
@@ -58,8 +58,8 @@ export default async function AdminChallengesPage(): Promise<React.JSX.Element> 
                   status={c.status}
                   player1Id={c.player1.id}
                   player2Id={c.player2.id}
-                  player1Tag={c.player1.tag}
-                  player2Tag={c.player2.tag}
+                  player1Name={c.player1.name}
+                  player2Name={c.player2.name}
                 />
               </TableCell>
             </TableRow>

@@ -4,6 +4,18 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { driverService } from '@/lib/container'
 import { DomainError } from '@/domain/errors/DomainError'
+import { getSupabase } from '@/lib/supabaseClient'
+
+function extractStoragePath(photoUrl: string, bucket: string): string | null {
+  try {
+    const marker = `/storage/v1/object/public/${bucket}/`
+    const idx = photoUrl.indexOf(marker)
+    if (idx === -1) return null
+    return photoUrl.slice(idx + marker.length)
+  } catch {
+    return null
+  }
+}
 
 const updateDriverSchema = z.object({
   name: z.string().min(2).optional(),
@@ -80,7 +92,8 @@ export async function PATCH(
     return NextResponse.json(driver)
   } catch (err) {
     if (err instanceof DomainError) return NextResponse.json({ error: err.code }, { status: 422 })
-    throw err
+    const message = err instanceof Error ? err.message : 'Internal server error'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
 
@@ -93,10 +106,23 @@ export async function DELETE(
 
   const { id } = await params
   try {
+    // Récupérer la photo avant suppression
+    const driver = await prisma.driver.findUnique({ where: { id }, select: { photo: true } })
+
     await driverService.deleteDriver(id)
+
+    // Supprimer la photo du bucket (best-effort)
+    if (driver?.photo) {
+      const path = extractStoragePath(driver.photo, 'drivers')
+      if (path) {
+        await getSupabase().storage.from('drivers').remove([path])
+      }
+    }
+
     return new NextResponse(null, { status: 204 })
   } catch (err) {
     if (err instanceof DomainError) return NextResponse.json({ error: err.code }, { status: 422 })
-    throw err
+    const message = err instanceof Error ? err.message : 'Internal server error'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

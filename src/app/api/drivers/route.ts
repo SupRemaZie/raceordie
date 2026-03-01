@@ -4,7 +4,6 @@ import { driverService } from '@/lib/container'
 import { DomainError } from '@/domain/errors/DomainError'
 
 const createDriverSchema = z.object({
-  tag: z.string().min(2).max(4).toUpperCase(),
   name: z.string().min(2),
   userId: z.string().optional(),
 })

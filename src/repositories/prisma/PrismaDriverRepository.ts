@@ -14,10 +14,6 @@ export class PrismaDriverRepository implements IDriverRepository {
     return this.prisma.driver.findUnique({ where: { id } })
   }
 
-  async findByTag(tag: string): Promise<DriverRecord | null> {
-    return this.prisma.driver.findUnique({ where: { tag } })
-  }
-
   async findAll(): Promise<DriverRecord[]> {
     return this.prisma.driver.findMany({ orderBy: { elo: 'desc' } })
   }
@@ -30,11 +26,7 @@ export class PrismaDriverRepository implements IDriverRepository {
   }
 
   async create(input: CreateDriverInput): Promise<DriverRecord> {
-    const [byTag, byName] = await Promise.all([
-      this.prisma.driver.findUnique({ where: { tag: input.tag } }),
-      this.prisma.driver.findUnique({ where: { name: input.name } }),
-    ])
-    if (byTag) throw new DomainError('TAG_TAKEN')
+    const byName = await this.prisma.driver.findUnique({ where: { name: input.name } })
     if (byName) throw new DomainError('NAME_TAKEN')
     return this.prisma.driver.create({ data: input })
   }

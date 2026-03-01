@@ -29,7 +29,6 @@ export default async function AdminDriversPage(): Promise<React.JSX.Element> {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>TAG</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>ELO</TableHead>
             <TableHead>Balance</TableHead>
@@ -38,11 +37,6 @@ export default async function AdminDriversPage(): Promise<React.JSX.Element> {
         <TableBody>
           {drivers.map((d) => (
             <TableRow key={d.id}>
-              <TableCell>
-                <span className="font-mono font-bold bg-muted px-2 py-0.5 rounded text-sm">
-                  {d.tag}
-                </span>
-              </TableCell>
               <TableCell className="font-medium">{d.name}</TableCell>
               <TableCell><EloBadge elo={d.elo} /></TableCell>
               <TableCell><MoneyDisplay amount={d.balance} /></TableCell>
@@ -50,7 +44,7 @@ export default async function AdminDriversPage(): Promise<React.JSX.Element> {
           ))}
           {drivers.length === 0 && (
             <TableRow>
-              <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+              <TableCell colSpan={3} className="text-center text-muted-foreground py-8">
                 No drivers yet
               </TableCell>
             </TableRow>

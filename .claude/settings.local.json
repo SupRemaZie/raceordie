@@ -25,7 +25,8 @@
       "Bash(npx prisma db push:*)",
       "Bash(git checkout:*)",
       "Bash(npm run:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(rm:*)"
     ]
   }
 }

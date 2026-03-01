@@ -38,7 +38,7 @@ export function AvatarUpload({ driverId, currentPhoto }: AvatarUploadProps): Rea
 
     try {
       const sb = getSupabase()
-      const ext = file.name.split('.').pop() ?? 'jpg'
+      const ext = (file.name.split('.').pop() ?? 'jpg').toLowerCase()
       const path = `public/${driverId}-${Date.now()}.${ext}`
 
       const { error: uploadError } = await sb.storage
@@ -55,8 +55,22 @@ export function AvatarUpload({ driverId, currentPhoto }: AvatarUploadProps): Rea
       })
 
       if (!res.ok) {
-        const json = (await res.json()) as { error?: string }
-        throw new Error(typeof json.error === 'string' ? json.error : 'Erreur lors de la mise à jour')
+        let errorMsg = `Erreur ${res.status}`
+        try {
+          const json = (await res.json()) as { error?: string }
+          if (typeof json.error === 'string') errorMsg = json.error
+        } catch { /* ignore non-JSON body */ }
+        throw new Error(errorMsg)
+      }
+
+      // Supprimer l'ancienne photo du bucket (best-effort)
+      if (currentPhoto) {
+        const marker = `/storage/v1/object/public/drivers/`
+        const idx = currentPhoto.indexOf(marker)
+        if (idx !== -1) {
+          const oldPath = currentPhoto.slice(idx + marker.length)
+          await sb.storage.from('drivers').remove([oldPath])
+        }
       }
 
       setSuccess(true)

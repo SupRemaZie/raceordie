@@ -31,8 +31,12 @@ export function SetDriverCodeForm({ driverId, currentCode }: SetDriverCodeFormPr
     })
 
     if (!res.ok) {
-      const json = (await res.json()) as { error?: string }
-      setError(typeof json.error === 'string' ? json.error : 'Erreur')
+      let errorMsg = `Erreur ${res.status}`
+      try {
+        const json = (await res.json()) as { error?: string }
+        if (typeof json.error === 'string') errorMsg = json.error
+      } catch { /* ignore non-JSON body */ }
+      setError(errorMsg)
     } else {
       setSuccess(true)
       setCode('')

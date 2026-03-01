@@ -1,7 +1,8 @@
 import type { IDriverRepository } from '@/repositories/interfaces/IDriverRepository'
 import type { IChallengeRepository, ChallengeRecord } from '@/repositories/interfaces/IChallengeRepository'
 import type { ISeasonRepository } from '@/repositories/interfaces/ISeasonRepository'
-import type { IEloCalculator } from '@/domain/elo/EloCalculator'
+import type { IRankingConfigRepository } from '@/repositories/interfaces/IRankingConfigRepository'
+import { EloCalculator } from '@/domain/elo/EloCalculator'
 import { ChallengeRules } from '@/domain/challenge/ChallengeRules'
 import { DomainError } from '@/domain/errors/DomainError'
 
@@ -18,7 +19,7 @@ export class ChallengeService {
     private readonly drivers: IDriverRepository,
     private readonly challenges: IChallengeRepository,
     private readonly seasons: ISeasonRepository,
-    private readonly elo: IEloCalculator,
+    private readonly rankingConfig: IRankingConfigRepository,
   ) {}
 
   async createChallenge(input: CreateChallengeInput): Promise<ChallengeRecord> {
@@ -66,7 +67,9 @@ export class ChallengeService {
     ])
     if (!winner || !loser) throw new DomainError('DRIVER_NOT_FOUND')
 
-    const eloResult = this.elo.calculate(winner.elo, loser.elo)
+    const cfg = await this.rankingConfig.get()
+    const elo = new EloCalculator(cfg)
+    const eloResult = elo.calculate(winner.elo, loser.elo)
 
     await Promise.all([
       this.drivers.update(winner.id, {
