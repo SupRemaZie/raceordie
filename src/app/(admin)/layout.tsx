@@ -22,7 +22,7 @@ export default async function AdminLayout({
 }): Promise<React.JSX.Element> {
   const session = await auth()
   if (!session) redirect('/login')
-  if (session.user?.name !== process.env.ADMIN_USERNAME) redirect('/ranking')
+  if (session.user?.role !== 'admin') redirect('/ranking')
 
   const username = session.user?.name ?? 'Admin'
   const initial = username.charAt(0).toUpperCase()
