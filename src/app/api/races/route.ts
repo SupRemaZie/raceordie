@@ -11,7 +11,6 @@ const createRaceSchema = z.object({
   participants: z.array(
     z.object({ driverId: z.string(), stake: z.number().int().positive() }),
   ).min(2),
-  commissionRate: z.union([z.literal(0.25), z.literal(0.30)]),
   circuitId: z.string().optional(),
 })
 

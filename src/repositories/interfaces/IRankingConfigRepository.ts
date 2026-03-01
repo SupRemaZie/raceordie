@@ -11,6 +11,8 @@ export interface RankingConfigRecord {
   racePoints2: number
   racePoints3: number
   racePointsOther: number
+  raceCommissionPct: number
+  challengeCommissionPct: number
 }
 
 export interface IRankingConfigRepository {

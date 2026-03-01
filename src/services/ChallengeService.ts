@@ -33,7 +33,8 @@ export class ChallengeService {
     ])
     if (!p1 || !p2) throw new DomainError('DRIVER_NOT_FOUND')
 
-    const finance = this.rules.calculate({ stake: input.stake })
+    const cfg = await this.rankingConfig.get()
+    const finance = this.rules.calculate({ stake: input.stake, commissionRate: cfg.challengeCommissionPct / 100 })
     const season = await this.seasons.getCurrentSeason()
 
     return this.challenges.create({

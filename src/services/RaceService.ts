@@ -3,7 +3,6 @@ import type { IRaceRepository } from '@/repositories/interfaces/IRaceRepository'
 import type { ISeasonRepository } from '@/repositories/interfaces/ISeasonRepository'
 import type { IRankingConfigRepository } from '@/repositories/interfaces/IRankingConfigRepository'
 import { RaceFinance } from '@/domain/race/RaceFinance'
-import type { CommissionRate } from '@/domain/race/types'
 import { DomainError } from '@/domain/errors/DomainError'
 
 export interface CreatePendingRaceInput {
@@ -11,7 +10,6 @@ export interface CreatePendingRaceInput {
   raceDate: Date
   checkpoints: string[]
   participants: Array<{ driverId: string; stake: number }>
-  commissionRate: CommissionRate
   circuitId?: string | null
 }
 
@@ -33,9 +31,12 @@ export class RaceService {
   async createPendingRace(input: CreatePendingRaceInput): Promise<string> {
     if (input.participants.length < 2) throw new DomainError('INSUFFICIENT_DRIVERS')
 
+    const cfg = await this.rankingConfig.get()
+    const commissionRate = cfg.raceCommissionPct / 100
+
     const stakes = input.participants.map((p) => p.stake)
     const totalPool = stakes.reduce((s, x) => s + x, 0)
-    const organizerFee = Math.floor(totalPool * input.commissionRate)
+    const organizerFee = Math.floor(totalPool * commissionRate)
     const finalPotCut = Math.floor(organizerFee * 0.05)
 
     const season = await this.seasons.getCurrentSeason()
@@ -46,7 +47,7 @@ export class RaceService {
       season,
       organizerFee,
       finalPotCut,
-      commissionRate: input.commissionRate,
+      commissionRate,
       circuitId: input.circuitId ?? null,
       participants: input.participants,
     })

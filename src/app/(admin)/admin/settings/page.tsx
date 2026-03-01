@@ -19,6 +19,8 @@ export default async function AdminSettingsPage(): Promise<React.JSX.Element> {
         racePoints2: config.racePoints2,
         racePoints3: config.racePoints3,
         racePointsOther: config.racePointsOther,
+        raceCommissionPct: config.raceCommissionPct,
+        challengeCommissionPct: config.challengeCommissionPct,
       }
     : undefined
 

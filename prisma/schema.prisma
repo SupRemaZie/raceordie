@@ -164,9 +164,11 @@ model RankingConfig {
   evenLossDelta   Int      @default(15)
   weakWinDelta    Int      @default(8)
   weakLossDelta   Int      @default(25)
-  racePoints1     Int      @default(100)
-  racePoints2     Int      @default(50)
-  racePoints3     Int      @default(30)
-  racePointsOther Int      @default(10)
-  updatedAt       DateTime @updatedAt
+  racePoints1          Int      @default(100)
+  racePoints2          Int      @default(50)
+  racePoints3          Int      @default(30)
+  racePointsOther      Int      @default(10)
+  raceCommissionPct    Int      @default(25)
+  challengeCommissionPct Int    @default(15)
+  updatedAt            DateTime @updatedAt
 }

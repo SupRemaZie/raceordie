@@ -5,6 +5,8 @@ import { rankingConfigRepo } from '@/lib/container'
 
 const positiveInt = z.number().int().positive()
 
+const pctInt = z.number().int().min(1).max(99)
+
 const patchSchema = z.object({
   eloFloor: positiveInt.optional(),
   diffThreshold: positiveInt.optional(),
@@ -18,6 +20,8 @@ const patchSchema = z.object({
   racePoints2: positiveInt.optional(),
   racePoints3: positiveInt.optional(),
   racePointsOther: positiveInt.optional(),
+  raceCommissionPct: pctInt.optional(),
+  challengeCommissionPct: pctInt.optional(),
 })
 
 export async function GET(): Promise<NextResponse> {

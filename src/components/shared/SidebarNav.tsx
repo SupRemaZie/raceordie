@@ -4,13 +4,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   Trophy, Flag, MapPin, Zap, Car, Calendar,
-  LayoutDashboard, Settings,
+  LayoutDashboard, Settings, DollarSign,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Trophy, Flag, MapPin, Zap, Car, Calendar,
-  LayoutDashboard, Settings,
+  LayoutDashboard, Settings, DollarSign,
 }
 
 export interface NavItem {

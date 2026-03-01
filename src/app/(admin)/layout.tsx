@@ -7,11 +7,12 @@ import { SidebarNav } from '@/components/shared/SidebarNav'
 import type { NavItem } from '@/components/shared/SidebarNav'
 
 const navItems: NavItem[] = [
-  { href: '/admin',            label: 'Dashboard',  icon: 'LayoutDashboard' },
-  { href: '/admin/drivers',    label: 'Drivers',    icon: 'Car' },
-  { href: '/admin/challenges', label: 'Challenges', icon: 'Zap' },
-  { href: '/admin/season',     label: 'Season',     icon: 'Calendar' },
-  { href: '/admin/settings',   label: 'Settings',   icon: 'Settings' },
+  { href: '/admin',             label: 'Dashboard',  icon: 'LayoutDashboard' },
+  { href: '/admin/drivers',     label: 'Drivers',    icon: 'Car' },
+  { href: '/admin/challenges',  label: 'Challenges', icon: 'Zap' },
+  { href: '/admin/season',      label: 'Season',     icon: 'Calendar' },
+  { href: '/admin/accounting',  label: 'Compta',     icon: 'DollarSign' },
+  { href: '/admin/settings',    label: 'Settings',   icon: 'Settings' },
 ]
 
 export default async function AdminLayout({

@@ -22,6 +22,8 @@ const DEFAULTS: RankingConfigRecord = {
   racePoints2: 50,
   racePoints3: 30,
   racePointsOther: 10,
+  raceCommissionPct: 25,
+  challengeCommissionPct: 15,
 }
 
 interface Props {
@@ -33,23 +35,37 @@ function NumField({
   label,
   value,
   onChange,
+  min = 1,
+  max,
+  suffix,
 }: {
   id: string
   label: string
   value: number
   onChange: (val: number) => void
+  min?: number
+  max?: number
+  suffix?: string
 }): React.JSX.Element {
   return (
     <div className="space-y-1.5">
       <Label htmlFor={id} className="text-xs text-muted-foreground">{label}</Label>
-      <Input
-        id={id}
-        type="number"
-        min={1}
-        value={value}
-        onChange={(e) => onChange(parseInt(e.target.value, 10) || 1)}
-        className="h-8 text-sm"
-      />
+      <div className="relative">
+        <Input
+          id={id}
+          type="number"
+          min={min}
+          max={max}
+          value={value}
+          onChange={(e) => onChange(parseInt(e.target.value, 10) || min)}
+          className={`h-8 text-sm${suffix ? ' pr-8' : ''}`}
+        />
+        {suffix && (
+          <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
+            {suffix}
+          </span>
+        )}
+      </div>
     </div>
   )
 }
@@ -86,6 +102,35 @@ export function RankingConfigForm({ initialValues }: Props): React.JSX.Element {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
+      {/* Commissions */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-semibold tracking-widest uppercase text-muted-foreground">
+            Commissions
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-2 gap-4">
+          <NumField
+            id="raceCommissionPct"
+            label="Commission courses"
+            value={values.raceCommissionPct}
+            onChange={(v) => set('raceCommissionPct', v)}
+            min={1}
+            max={99}
+            suffix="%"
+          />
+          <NumField
+            id="challengeCommissionPct"
+            label="Commission challenges"
+            value={values.challengeCommissionPct}
+            onChange={(v) => set('challengeCommissionPct', v)}
+            min={1}
+            max={99}
+            suffix="%"
+          />
+        </CardContent>
+      </Card>
+
       {/* ELO Général */}
       <Card>
         <CardHeader className="pb-3">
