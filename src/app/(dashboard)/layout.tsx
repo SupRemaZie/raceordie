@@ -14,7 +14,6 @@ const adminNavItems: NavItem[] = [
   { href: '/challenges', label: 'Challenges', icon: 'Zap' },
   { href: '/drivers',    label: 'Drivers',    icon: 'Car' },
   { href: '/season',     label: 'Season',     icon: 'Calendar' },
-  { href: '/settings',   label: 'Settings',   icon: 'Settings' },
 ]
 
 export default async function DashboardLayout({
