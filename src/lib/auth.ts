@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { authConfig } from '@/auth.config'
+import { prisma } from '@/lib/prisma'
 
 type Role = 'racer' | 'admin'
 
@@ -9,7 +10,7 @@ const ACCESS_CODES: Record<string, Role> = {
   shadowracer: 'admin',
 }
 
-const RACER_ALLOWED = ['/ranking']
+const RACER_ALLOWED = ['/ranking', '/drivers', '/profile']
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -19,11 +20,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       credentials: {
         code: { label: "Code d'accès", type: 'password' },
       },
-      async authorize(credentials): Promise<{ id: string; role: Role } | null> {
+      async authorize(credentials): Promise<{ id: string; role: Role; driverId?: string } | null> {
         const code = typeof credentials?.code === 'string' ? credentials.code : ''
+
+        // Global codes (admin / shared racer)
         const role = ACCESS_CODES[code]
-        if (!role) return null
-        return { id: role, role }
+        if (role) return { id: role, role }
+
+        // Individual driver login code
+        const driver = await prisma.driver.findFirst({
+          where: { loginCode: code, archived: false },
+          select: { id: true },
+        })
+        if (driver) return { id: driver.id, role: 'racer', driverId: driver.id }
+
+        return null
       },
     }),
   ],
@@ -52,10 +63,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     jwt({ token, user }) {
       if (user?.role) token.role = user.role
+      if (user?.driverId) token.driverId = user.driverId
       return token
     },
     session({ session, token }) {
       if (token.role) session.user.role = token.role as Role
+      if (token.driverId) session.user.driverId = token.driverId as string
       return session
     },
   },
